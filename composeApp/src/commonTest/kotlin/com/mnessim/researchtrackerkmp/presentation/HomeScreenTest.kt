@@ -17,7 +17,7 @@ class HomeScreenTest {
         setContent {
             App()
         }
-        onNodeWithText("Research Tracker").assertExists()
+        onNodeWithTag("Title").assertExists()
         onNodeWithTag("AddTermButton").assertExists().performClick()
         onNodeWithTag("TermAlertDialog").assertExists()
         onNodeWithText("Test term").assertDoesNotExist()
