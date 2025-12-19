@@ -22,7 +22,10 @@ fun AddTermAlert(
         modifier = Modifier.testTag(tag),
         onDismissRequest = onDismiss,
         dismissButton = {
-            TextButton(onClick = onDismiss) {
+            TextButton(
+                onClick = onDismiss,
+                modifier = Modifier.testTag("DismissButton")
+            ) {
                 Text("Dismiss")
             }
         },

@@ -17,14 +17,25 @@ class HomeScreenTest {
         setContent {
             HomeScreen()
         }
+        // Basic UI elements with no terms
         onNodeWithTag("Title").assertExists()
         onNodeWithTag("AddTermButton").assertExists().performClick()
+        // AlertDialog UI
         onNodeWithTag("TermAlertDialog").assertExists()
+        onNodeWithTag("DismissButton").assertExists()
         onNodeWithText("Test term").assertDoesNotExist()
         onNodeWithTag("TermTextField").assertExists().performTextInput("Test term")
         onNodeWithTag("SubmitButton").assertExists().performClick()
+        // After term added
         onNodeWithText("Test term").assertExists()
+        // Lock term and try to delete
+        onNodeWithTag("ToggleLockButton").assertExists().performClick()
+        onNodeWithTag("TermNotificationsButton").assertExists()
         onNodeWithTag("DeleteButton").assertExists().performClick()
+        onNodeWithText("Test term").assertExists()
+        // Unlock term and try to delete
+        onNodeWithTag("ToggleLockButton").performClick()
+        onNodeWithTag("DeleteButton").performClick()
         onNodeWithText("Test term").assertDoesNotExist()
     }
 }

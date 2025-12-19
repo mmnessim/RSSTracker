@@ -1,6 +1,7 @@
 package com.mnessim.researchtrackerkmp.presentation.screens.homescreen
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.safeContentPadding
@@ -33,16 +34,20 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                 .background(MaterialTheme.colorScheme.primaryContainer)
                 .safeContentPadding()
                 .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Text(
-                "Research Tracker",
-                style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 20.sp),
-                modifier = Modifier.testTag("Title")
-            )
-            for (term in terms) {
-                TermRow(term = term, onDelete = { terms.remove(term) })
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Text(
+                    "Research Tracker",
+                    style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 20.sp),
+                    modifier = Modifier.testTag("Title")
+                )
+                for (term in terms) {
+                    TermRow(term = term, onDelete = { terms.remove(term) })
+                }
             }
+
             AddTermButton(
                 onClick = { showAlertDialog = true }
             )
