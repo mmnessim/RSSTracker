@@ -21,6 +21,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import com.mnessim.researchtrackerkmp.presentation.screens.HomeScreen
@@ -40,24 +41,6 @@ fun App() {
     ) { innerPadding ->
         HomeScreen(modifier = Modifier.padding(innerPadding).fillMaxSize())
     }
-//    MaterialTheme {
-//        Column(
-//            modifier = Modifier
-//                .background(MaterialTheme.colorScheme.primaryContainer)
-//                .safeContentPadding()
-//                .fillMaxSize(),
-//            horizontalAlignment = Alignment.CenterHorizontally,
-//        ) {
-//            Text("Research Tracker", style = TextStyle(fontWeight = FontWeight.Bold))
-//            AddTermButton(onClick = { showDialog = true })
-//            if (showDialog) {
-//                AddTermAlert(
-//                    onSubmit = { showDialog = false },
-//                    onDismiss = { showDialog = false }
-//                )
-//            }
-//        }
-//    }
 }
 
 @Composable
@@ -76,10 +59,13 @@ fun AddTermButton(
 
 @Composable
 fun AddTermAlert(
+    textFieldState: TextFieldState,
     onDismiss: () -> Unit,
-    onSubmit: () -> Unit
+    onSubmit: () -> Unit,
+    tag: String,
 ) {
     AlertDialog(
+        modifier = Modifier.testTag(tag),
         onDismissRequest = onDismiss,
         dismissButton = {
             TextButton(onClick = onDismiss) {
@@ -95,7 +81,10 @@ fun AddTermAlert(
         text = {
             Column {
                 Text("This is an alert dialog")
-                TextField(state = TextFieldState())
+                TextField(
+                    state = textFieldState,
+                    modifier = Modifier.testTag("TermTextField")
+                )
             }
         }
     )
