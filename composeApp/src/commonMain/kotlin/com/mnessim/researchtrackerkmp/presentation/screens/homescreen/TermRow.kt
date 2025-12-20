@@ -10,29 +10,29 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
+import com.mnessim.researchtrackerkmp.domain.models.Term
 
 @Composable
-fun TermRow(modifier: Modifier = Modifier, term: String, onDelete: () -> Unit) {
-    var locked by remember { mutableStateOf(false) }
-
+fun TermRow(
+    modifier: Modifier = Modifier,
+    term: Term,
+    onDelete: () -> Unit,
+    onToggleLock: () -> Unit
+) {
     Row(
         modifier = modifier.testTag("TermRow"),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Text(term)
+        Text(term.term)
         IconButton(
             modifier = Modifier.testTag("ToggleLockButton"),
-            onClick = { locked = !locked },
+            onClick = onToggleLock,
             content = {
                 Icon(
-                    imageVector = if (locked) Icons.Default.Lock else Icons.Default.LockOpen,
+                    imageVector = if (term.locked) Icons.Default.Lock else Icons.Default.LockOpen,
                     contentDescription = "Toggle Locked"
                 )
             })
@@ -48,7 +48,7 @@ fun TermRow(modifier: Modifier = Modifier, term: String, onDelete: () -> Unit) {
         IconButton(
             modifier = Modifier.testTag("DeleteButton"),
             onClick = {
-                if (!locked) onDelete()
+                if (!term.locked) onDelete()
             },
             content = {
                 Icon(

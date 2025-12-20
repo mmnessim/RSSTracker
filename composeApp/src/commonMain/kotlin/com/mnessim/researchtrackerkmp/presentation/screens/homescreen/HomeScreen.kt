@@ -50,7 +50,11 @@ fun HomeScreen(
                     modifier = Modifier.testTag("Title")
                 )
                 for (term in terms) {
-                    TermRow(term = term.term, onDelete = { viewmodel.removeTerm(term.id) })
+                    TermRow(
+                        term = term,
+                        onDelete = { viewmodel.removeTerm(term.id) },
+                        onToggleLock = { viewmodel.toggleLocked(term) }
+                    )
                 }
             }
 

@@ -41,4 +41,11 @@ class HomeScreenViewModel(private val termsRepo: TermsRepo) : ViewModel() {
             loadTerms()
         }
     }
+
+    fun toggleLocked(term: Term) {
+        viewModelScope.launch {
+            termsRepo.updateTerm(Term(id = term.id, term = term.term, locked = !term.locked))
+            loadTerms()
+        }
+    }
 }
