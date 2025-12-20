@@ -10,8 +10,8 @@ import androidx.compose.foundation.text.input.clearText
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -21,13 +21,17 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
+import com.mnessim.researchtrackerkmp.domain.repositories.TermsRepo
+import org.koin.compose.koinInject
 
 
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
 ) {
-    val terms = remember { mutableStateListOf<String>() }
+    val repo = koinInject<TermsRepo>()
+    val viewmodel = remember { HomeScreenViewModel(repo) }
+    val terms by viewmodel.terms.collectAsState()
     val textFieldState = remember { TextFieldState() }
     var showAlertDialog by remember { mutableStateOf(false) }
     MaterialTheme {
@@ -46,7 +50,7 @@ fun HomeScreen(
                     modifier = Modifier.testTag("Title")
                 )
                 for (term in terms) {
-                    TermRow(term = term, onDelete = { terms.remove(term) })
+                    TermRow(term = term.term, onDelete = { viewmodel.removeTerm(term.id) })
                 }
             }
 
@@ -55,12 +59,12 @@ fun HomeScreen(
             )
             if (showAlertDialog) {
                 AddTermAlert(
-                    textFieldState = textFieldState,
+                    textFieldState = viewmodel.controller,
                     onSubmit = {
-                        val input = textFieldState.text.toString()
+                        val input = viewmodel.controller.text.toString()
                         if (input.isNotEmpty()) {
-                            terms.add(input)
-                            textFieldState.clearText()
+                            viewmodel.addTerm(false)
+                            viewmodel.controller.clearText()
                         }
                         showAlertDialog = false
                     },

@@ -15,7 +15,7 @@ fun main() = application {
         title = "ResearchTrackerKMP",
     ) {
         startKoin {
-            modules(listOf(databaseModule, jvmPlatformModule))
+            modules(commonModules + jvmPlatformModule)
         }
         App()
     }

@@ -31,6 +31,14 @@ class HomeScreenViewModel(private val termsRepo: TermsRepo) : ViewModel() {
         if (termName.isEmpty()) return
         viewModelScope.launch {
             termsRepo.insertTerm(termName, locked)
+            loadTerms()
+        }
+    }
+
+    fun removeTerm(id: Long) {
+        viewModelScope.launch {
+            termsRepo.deleteTerm(id)
+            loadTerms()
         }
     }
 }

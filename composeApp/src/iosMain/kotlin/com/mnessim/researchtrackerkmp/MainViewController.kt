@@ -10,7 +10,7 @@ fun MainViewController() = ComposeUIViewController {
         single<DBFactory> { DBFactory() }
     }
     startKoin {
-        modules(listOf(databaseModule, iosPlatformModule))
+        modules(commonModules + iosPlatformModule)
     }
     App()
 }
