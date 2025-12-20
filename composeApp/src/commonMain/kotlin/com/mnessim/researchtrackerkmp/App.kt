@@ -12,13 +12,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import com.mnessim.Database
 import com.mnessim.researchtrackerkmp.presentation.screens.homescreen.HomeScreen
 import org.jetbrains.compose.ui.tooling.preview.Preview
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
-fun App() {
+fun App(database: Database) {
     var showDialog by remember { mutableStateOf(false) }
     Scaffold(
         topBar = {

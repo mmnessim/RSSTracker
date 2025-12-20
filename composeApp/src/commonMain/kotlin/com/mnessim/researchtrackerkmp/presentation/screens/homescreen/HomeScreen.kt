@@ -24,7 +24,9 @@ import androidx.compose.ui.unit.sp
 
 
 @Composable
-fun HomeScreen(modifier: Modifier = Modifier) {
+fun HomeScreen(
+    modifier: Modifier = Modifier,
+) {
     val terms = remember { mutableStateListOf<String>() }
     val textFieldState = remember { TextFieldState() }
     var showAlertDialog by remember { mutableStateOf(false) }
