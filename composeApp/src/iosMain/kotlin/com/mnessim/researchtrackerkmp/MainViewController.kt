@@ -2,9 +2,15 @@ package com.mnessim.researchtrackerkmp
 
 import androidx.compose.ui.window.ComposeUIViewController
 import com.mnessim.researchtrackerkmp.domain.data.DBFactory
-import com.mnessim.researchtrackerkmp.domain.data.createDatabase
+import org.koin.core.context.startKoin
+import org.koin.dsl.module
 
 fun MainViewController() = ComposeUIViewController {
-    val database = createDatabase(DBFactory())
-    App(database)
+    val iosPlatformModule = module {
+        single<DBFactory> { DBFactory() }
+    }
+    startKoin {
+        modules(listOf(databaseModule, iosPlatformModule))
+    }
+    App()
 }

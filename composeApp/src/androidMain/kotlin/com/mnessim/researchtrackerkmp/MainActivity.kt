@@ -5,16 +5,23 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.mnessim.researchtrackerkmp.domain.data.DBFactory
-import com.mnessim.researchtrackerkmp.domain.data.createDatabase
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
+import org.koin.dsl.module
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         enableEdgeToEdge()
         super.onCreate(savedInstanceState)
-        val database = createDatabase(DBFactory(context = applicationContext))
-
+        val androidPlatformModule = module {
+            single<DBFactory> { DBFactory(applicationContext) }
+        }
+        startKoin {
+            androidContext(this@MainActivity)
+            modules(listOf(databaseModule, androidPlatformModule))
+        }
         setContent {
-            App(database)
+            App()
         }
     }
 }

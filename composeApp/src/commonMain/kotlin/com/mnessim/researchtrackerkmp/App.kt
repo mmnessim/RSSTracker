@@ -13,14 +13,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.mnessim.Database
+import com.mnessim.researchtrackerkmp.domain.repositories.TermsRepo
 import com.mnessim.researchtrackerkmp.presentation.screens.homescreen.HomeScreen
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
-fun App(database: Database) {
+fun App() {
+
+    val db = koinInject<Database>()
+    val repo = TermsRepo(db)
     var showDialog by remember { mutableStateOf(false) }
+
+    repo.insertTerm("test", true)
+    val all = repo.getAllTerms()
+    print(all)
     Scaffold(
         topBar = {
             TopAppBar(
@@ -30,6 +39,8 @@ fun App(database: Database) {
     ) { innerPadding ->
         HomeScreen(modifier = Modifier.padding(innerPadding).fillMaxSize())
     }
+
+
 }
 
 
