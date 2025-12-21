@@ -16,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.InvertColors
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -38,6 +39,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.mnessim.researchtrackerkmp.domain.repositories.PreferencesRepo
 import com.mnessim.researchtrackerkmp.presentation.screens.detailsscreen.DetailsScreen
 import com.mnessim.researchtrackerkmp.presentation.screens.homescreen.HomeScreen
 import com.mnessim.researchtrackerkmp.presentation.theme.darkScheme
@@ -45,6 +47,7 @@ import com.mnessim.researchtrackerkmp.presentation.theme.highContrastDarkColorSc
 import com.mnessim.researchtrackerkmp.presentation.theme.highContrastLightColorScheme
 import com.mnessim.researchtrackerkmp.presentation.theme.lightScheme
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -55,6 +58,10 @@ fun App() {
     val canPop = navBackStackEntry?.destination?.route != Home::class.qualifiedName
     var colorScheme by remember { mutableStateOf(lightScheme) }
     var showColorSchemeDialog by remember { mutableStateOf(false) }
+
+    val prefsRepo = koinInject<PreferencesRepo>()
+
+    loadColorScheme(prefsRepo, { it -> colorScheme = it })
 
     Scaffold(
         topBar = {
@@ -106,20 +113,44 @@ fun App() {
                     confirmButton = {
 
                         Row(horizontalArrangement = Arrangement.SpaceBetween) {
-                            TextButton(onClick = { colorScheme = lightScheme }) {
+                            TextButton(onClick = {
+                                onColorSchemeChange(
+                                    prefsRepo,
+                                    "light"
+                                ) { it -> colorScheme = it }
+                            }) {
                                 Text("Light")
                             }
-                            TextButton(onClick = { colorScheme = darkScheme }) {
+                            TextButton(onClick = {
+                                onColorSchemeChange(
+                                    prefsRepo,
+                                    "dark"
+                                ) { it -> colorScheme = it }
+                            }) {
                                 Text("Dark")
                             }
                         }
                     },
                     dismissButton = {
                         Row(horizontalArrangement = Arrangement.SpaceBetween) {
-                            TextButton(onClick = { colorScheme = highContrastLightColorScheme }) {
+                            TextButton(onClick = {
+                                onColorSchemeChange(
+                                    prefsRepo,
+                                    "lightContrast"
+                                ) { it ->
+                                    colorScheme = it
+                                }
+                            }) {
                                 Text("Light Contrast")
                             }
-                            TextButton(onClick = { colorScheme = highContrastDarkColorScheme }) {
+                            TextButton(onClick = {
+                                onColorSchemeChange(
+                                    prefsRepo,
+                                    "darkContrast"
+                                ) { it ->
+                                    colorScheme = it
+                                }
+                            }) {
                                 Text("Dark Contrast")
                             }
                         }
@@ -168,4 +199,36 @@ fun App() {
     } // Scaffold
 }
 
+fun onColorSchemeChange(
+    repo: PreferencesRepo,
+    colorScheme: String,
+    onUpdate: (ColorScheme) -> Unit
+) {
+    val current = repo.getPrefByKey("colorScheme")
+    if (current == null) {
+        repo.insertPref("colorScheme", colorScheme)
+    } else {
+        repo.updatePref("colorScheme", colorScheme)
+    }
+    when (colorScheme) {
+        "light" -> onUpdate(lightScheme)
+        "dark" -> onUpdate(darkScheme)
+        "lightContrast" -> onUpdate(highContrastLightColorScheme)
+        "darkContrast" -> onUpdate(highContrastDarkColorScheme)
+        else -> onUpdate(lightScheme)
+    }
+}
 
+fun loadColorScheme(
+    repo: PreferencesRepo,
+    onUpdate: (ColorScheme) -> Unit
+) {
+    val current = repo.getPrefByKey("colorScheme") ?: return
+    when (current) {
+        "light" -> onUpdate(lightScheme)
+        "dark" -> onUpdate(darkScheme)
+        "lightContrast" -> onUpdate(highContrastLightColorScheme)
+        "darkContrast" -> onUpdate(highContrastDarkColorScheme)
+        else -> onUpdate(lightScheme)
+    }
+}

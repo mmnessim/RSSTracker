@@ -1,0 +1,29 @@
+CREATE TABLE Preferences (
+    key TEXT NOT NULL PRIMARY KEY,
+    value TEXT NOT NULL
+);
+
+insertPreference:
+INSERT INTO Preferences(key, value)
+VALUES (?, ?);
+
+updatePreference:
+UPDATE Preferences
+SET value = ?
+WHERE key = ?;
+
+getPreferenceByKey:
+SELECT key, value
+FROM Preferences
+WHERE key = ?;
+
+getAllPreferences:
+SELECT key, value
+FROM Preferences;
+
+deletePreferenceByKey:
+DELETE FROM Preferences
+WHERE key = ?;
+
+deleteAllPreferences:
+DELETE FROM Preferences;
