@@ -37,10 +37,10 @@ fun AddTermAlert(
                 Text("Confirm")
             } // TextButton
         }, // confirmButton
-        title = { Text("Alert Dialog") },
+        title = { Text("Add Term") },
         text = {
             Column {
-                Text("This is an alert dialog")
+                Text("Add new search term")
                 TextField(
                     state = textFieldState,
                     modifier = Modifier.testTag("TermTextField")
