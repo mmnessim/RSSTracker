@@ -1,6 +1,7 @@
 package com.mnessim.researchtrackerkmp
 
 import android.Manifest
+import android.app.Application
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
@@ -33,18 +34,15 @@ class MainActivity : ComponentActivity() {
             }
         }
 
-        val androidPlatformModule = module {
-            single<DBFactory> { DBFactory(applicationContext) }
-            single {
-                NotificationManager().apply { init(get<Context>()) }
-            }
-        }
-        startKoin {
-            androidContext(this@MainActivity)
-            modules(commonModules + androidPlatformModule)
-        }
         setContent {
-            App()
+            val startDestination = when (intent.getStringExtra("navigate_to")) {
+                "details" -> DetailsRoute(
+                    id = intent.getStringExtra("details_id")?.toLongOrNull() ?: 1L
+                )
+
+                else -> HomeRoute
+            }
+            App(startDestination = startDestination)
         }
     }
 }
@@ -53,4 +51,20 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun AppAndroidPreview() {
     App()
+}
+
+class AndroidApp : Application() {
+    override fun onCreate() {
+        super.onCreate()
+        val androidPlatformModule = module {
+            single<DBFactory> { DBFactory(applicationContext) }
+            single {
+                NotificationManager().apply { init(get<Context>()) }
+            }
+        }
+        startKoin {
+            androidContext(this@AndroidApp)
+            modules(commonModules + androidPlatformModule)
+        }
+    }
 }

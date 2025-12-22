@@ -55,10 +55,10 @@ import org.koin.compose.koinInject
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
-fun App() {
+fun App(startDestination: AppRoute = HomeRoute) {
     val navController = rememberNavController()
     val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val canPop = navBackStackEntry?.destination?.route != Home::class.qualifiedName
+    val canPop = navBackStackEntry?.destination?.route != HomeRoute::class.qualifiedName
     var colorScheme by remember { mutableStateOf(lightScheme) }
     var showColorSchemeDialog by remember { mutableStateOf(false) }
 
@@ -183,29 +183,29 @@ fun App() {
             ) {
                 NavHost(
                     navController = navController,
-                    startDestination = Home,
+                    startDestination = startDestination,
                     enterTransition = { slideInHorizontally { it } + fadeIn() },
                     exitTransition = { slideOutHorizontally { -it } + fadeOut() },
                     popEnterTransition = { slideInHorizontally { -it } + fadeIn() },
                     popExitTransition = { slideOutHorizontally { it } + fadeOut() }
                 ) {
-                    composable<Home> {
+                    composable<HomeRoute> {
                         HomeScreen(
                             modifier = Modifier
                                 .padding(innerPadding)
                                 .fillMaxSize()
                                 .background(MaterialTheme.colorScheme.primaryContainer),
-                            onNavigate = { id -> navController.navigate(Details(id)) })
+                            onNavigate = { id -> navController.navigate(DetailsRoute(id)) })
                     } // composable<Home>
-                    composable<Details> { backStackEntry ->
-                        val details: Details = backStackEntry.toRoute<Details>()
+                    composable<DetailsRoute> { backStackEntry ->
+                        val details: DetailsRoute = backStackEntry.toRoute<DetailsRoute>()
                         DetailsScreen(
                             modifier = Modifier
                                 .padding(innerPadding)
                                 .fillMaxSize()
                                 .background(MaterialTheme.colorScheme.primaryContainer),
                             onBack = {
-                                navController.popBackStack()
+                                navController.navigate(HomeRoute)
                             },
                             id = details.id
                         )

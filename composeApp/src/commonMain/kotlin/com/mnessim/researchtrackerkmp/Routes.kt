@@ -2,8 +2,10 @@ package com.mnessim.researchtrackerkmp
 
 import kotlinx.serialization.Serializable
 
-@Serializable
-object Home
+interface AppRoute
 
 @Serializable
-data class Details(val id: Long)
+object HomeRoute : AppRoute
+
+@Serializable
+data class DetailsRoute(val id: Long) : AppRoute
