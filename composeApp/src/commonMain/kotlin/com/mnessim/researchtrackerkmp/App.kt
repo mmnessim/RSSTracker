@@ -29,6 +29,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,7 +50,7 @@ import com.mnessim.researchtrackerkmp.presentation.theme.highContrastDarkColorSc
 import com.mnessim.researchtrackerkmp.presentation.theme.highContrastLightColorScheme
 import com.mnessim.researchtrackerkmp.presentation.theme.lightScheme
 import com.mnessim.researchtrackerkmp.utils.notifications.NotificationManager
-import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.ui.tooling.preview.Preview
 import org.koin.compose.koinInject
 
@@ -62,10 +63,18 @@ fun App(startDestination: AppRoute = HomeRoute) {
     val canPop = navBackStackEntry?.destination?.route != HomeRoute::class.qualifiedName
     var colorScheme by remember { mutableStateOf(lightScheme) }
     var showColorSchemeDialog by remember { mutableStateOf(false) }
-    val scope = remember { MainScope() }
 
     val prefsRepo = koinInject<PreferencesRepo>()
     val manager = koinInject<NotificationManager>()
+
+    LaunchedEffect(Unit) {
+        NavigationEvents.navigateToDetails.collectLatest { id ->
+            if (id != null) {
+                navController.navigate(DetailsRoute(id))
+                NavigationEvents.triggerNavigateToDetails(null)
+            }
+        }
+    }
 
     loadColorScheme(prefsRepo, { it -> colorScheme = it })
 

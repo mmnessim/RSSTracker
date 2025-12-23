@@ -1,6 +1,7 @@
 import UIKit
 import UserNotifications
 import Foundation
+import ComposeApp
 
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     func application(
@@ -12,7 +13,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         return true
     }
 
-    // Show notifications while app is in foreground
     func userNotificationCenter(
         _ center: UNUserNotificationCenter,
         willPresent notification: UNNotification,
@@ -21,24 +21,28 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         completionHandler([.banner, .sound, .badge])
     }
 
-    // Handle notification tap
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+    func userNotificationCenter(
+        _ center: UNUserNotificationCenter,
+        didReceive response: UNNotificationResponse,
+        withCompletionHandler completionHandler: @escaping () -> Void
+    ) {
         let userInfo = response.notification.request.content.userInfo
-        // Support both legacy and new keys for details ID
         var detailsId: NSNumber? = nil
-        if let id = userInfo["id"] as? NSNumber {
-            detailsId = id
-        } else if let idString = userInfo["id"] as? String, let id = Int(idString) {
-            detailsId = NSNumber(value: id)
-        } else if let id = userInfo["details_id"] as? NSNumber {
+        if let id = userInfo["details_id"] as? NSNumber {
             detailsId = id
         } else if let idString = userInfo["details_id"] as? String, let id = Int(idString) {
             detailsId = NSNumber(value: id)
         }
         if let detailsId = detailsId {
-            NotificationCenter.default.post(name: .navigateToDetails, object: detailsId)
+            NotificationCenter.default.post(name: .navigateToDetails, object: detailsId) // Unneeded??
+            NavigationEvents.shared.triggerNavigateToDetails(id: KotlinLong(integerLiteral: (detailsId.intValue)))
+            handleTap(response)
         }
         completionHandler()
+    }
+
+    func handleTap(_ response: UNNotificationResponse) {
+        print("Notification tapped: \(response.notification.request.identifier)")
     }
 }
 

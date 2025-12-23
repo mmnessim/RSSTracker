@@ -43,6 +43,8 @@ actual class NotificationManager actual constructor() {
             trigger = trigger
         )
 
+        val center = UNUserNotificationCenter.currentNotificationCenter()
+
         UNUserNotificationCenter.currentNotificationCenter().addNotificationRequest(request, null)
     }
 }

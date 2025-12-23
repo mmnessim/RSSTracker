@@ -35,7 +35,3 @@ fun requestNotificationPermissions() {
     )
 }
 
-fun requestDetails() {
-    val center = UNUserNotificationCenter.currentNotificationCenter()
-
-}
