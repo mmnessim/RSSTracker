@@ -5,29 +5,13 @@ import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.InvertColors
-import androidx.compose.material.icons.filled.Notifications
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -35,14 +19,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import com.mnessim.researchtrackerkmp.domain.repositories.PreferencesRepo
+import com.mnessim.researchtrackerkmp.presentation.core.AppBar
+import com.mnessim.researchtrackerkmp.presentation.core.ColorSchemePickerDialog
 import com.mnessim.researchtrackerkmp.presentation.screens.detailsscreen.DetailsScreen
 import com.mnessim.researchtrackerkmp.presentation.screens.homescreen.HomeScreen
 import com.mnessim.researchtrackerkmp.presentation.theme.darkScheme
@@ -56,6 +40,7 @@ import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+@Suppress("UNUSED_VARIABLE")
 @Preview
 fun App(startDestination: AppRoute = HomeRoute) {
     val navController = rememberNavController()
@@ -66,7 +51,7 @@ fun App(startDestination: AppRoute = HomeRoute) {
 
     val prefsRepo = koinInject<PreferencesRepo>()
     val manager = koinInject<NotificationManager>()
-    
+
     print("recompile")
 
     LaunchedEffect(Unit) {
@@ -82,113 +67,29 @@ fun App(startDestination: AppRoute = HomeRoute) {
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                colors = TopAppBarColors(
-                    containerColor = colorScheme.primaryContainer,
-                    scrolledContainerColor = colorScheme.primaryContainer,
-                    navigationIconContentColor = colorScheme.onPrimaryContainer,
-                    titleContentColor = colorScheme.onPrimaryContainer,
-                    actionIconContentColor = colorScheme.onPrimaryContainer
-                ),
-                title = { Text("Research Tracker") },
-                navigationIcon = if (canPop) {
-                    {
-                        IconButton(onClick = { navController.popBackStack() }) {
-                            Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = "Back")
-                        }
-                    }
-                } else {
-                    {}
-                }, // navigationIcon =
-                actions = {
-                    IconButton(onClick = {
-                        manager.showNotification("test", "test")
-                    }) {
-                        Icon(
-                            imageVector = Icons.Default.Notifications,
-                            contentDescription = "Test Notifications"
-                        )
-                    }
-                    Surface(
-                        modifier = Modifier
-                            .padding(horizontal = 18.dp)
-                            .pointerInput(Unit) {
-                                detectTapGestures(
-                                    onTap = {
-                                        showColorSchemeDialog = true
-                                    },
-                                    onLongPress = {
-                                        showColorSchemeDialog = true
-                                    }
-                                )
-                            },
-                        shape = CircleShape
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.InvertColors,
-                            contentDescription = "Toggle Dark Mode"
-                        ) // Icon
-                    } // Surface
-                }, // actions =
-            ) // TopAppBar
-        }, // topbar =
+            AppBar(
+                colorScheme = colorScheme,
+                canPop = canPop,
+                onNavigate = { navController.popBackStack() },
+                onChangeColorScheme = { showColorSchemeDialog = true },
+                onNotificationButton = { manager.showNotification("Test", "test") }
+            ) // AppBar
+        } // topBar =
     ) { innerPadding ->
         MaterialTheme(
             colorScheme = colorScheme
         ) {
 
             if (showColorSchemeDialog) {
-                AlertDialog(
-                    onDismissRequest = { showColorSchemeDialog = false },
-                    title = { Text(text = "Choose Color Scheme") },
-                    text = { Text("Select an option") },
-                    confirmButton = {
-
-                        Row(horizontalArrangement = Arrangement.SpaceBetween) {
-                            TextButton(onClick = {
-                                onColorSchemeChange(
-                                    prefsRepo,
-                                    "light"
-                                ) { it -> colorScheme = it }
-                            }) {
-                                Text("Light")
-                            }
-                            TextButton(onClick = {
-                                onColorSchemeChange(
-                                    prefsRepo,
-                                    "dark"
-                                ) { it -> colorScheme = it }
-                            }) {
-                                Text("Dark")
-                            }
-                        }
-                    },
-                    dismissButton = {
-                        Row(horizontalArrangement = Arrangement.SpaceBetween) {
-                            TextButton(onClick = {
-                                onColorSchemeChange(
-                                    prefsRepo,
-                                    "lightContrast"
-                                ) { it ->
-                                    colorScheme = it
-                                }
-                            }) {
-                                Text("Light Contrast")
-                            }
-                            TextButton(onClick = {
-                                onColorSchemeChange(
-                                    prefsRepo,
-                                    "darkContrast"
-                                ) { it ->
-                                    colorScheme = it
-                                }
-                            }) {
-                                Text("Dark Contrast")
-                            }
-                        }
+                ColorSchemePickerDialog(
+                    onDismiss = { showColorSchemeDialog = false },
+                    onColorSchemeChange = { it ->
+                        onColorSchemeChange(
+                            prefsRepo, it, { it -> colorScheme = it }
+                        )
                     }
-                ) // AlertDialog
-            }
+                ) // ColorSchemePickerDialog
+            } // if (showColorSchemeDialog)
 
 
             Box(
@@ -229,7 +130,7 @@ fun App(startDestination: AppRoute = HomeRoute) {
             } // Box
         } // MaterialTheme
     } // Scaffold
-}
+} // App
 
 fun onColorSchemeChange(
     repo: PreferencesRepo,
