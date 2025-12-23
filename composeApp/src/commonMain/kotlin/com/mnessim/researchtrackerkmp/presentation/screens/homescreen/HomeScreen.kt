@@ -16,7 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.mnessim.researchtrackerkmp.domain.repositories.TermsRepo
+import com.mnessim.researchtrackerkmp.domain.repositories.ITermsRepo
 import org.koin.compose.koinInject
 
 
@@ -25,7 +25,7 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     onNavigate: (Long) -> Unit,
 ) {
-    val repo = koinInject<TermsRepo>()
+    val repo = koinInject<ITermsRepo>()
     val viewmodel = remember { HomeScreenViewModel(repo) }
     val terms by viewmodel.terms.collectAsState()
     var showAlertDialog by remember { mutableStateOf(false) }

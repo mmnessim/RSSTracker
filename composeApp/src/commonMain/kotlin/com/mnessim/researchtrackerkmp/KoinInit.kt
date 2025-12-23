@@ -2,6 +2,7 @@ package com.mnessim.researchtrackerkmp
 
 import com.mnessim.Database
 import com.mnessim.researchtrackerkmp.domain.data.DBFactory
+import com.mnessim.researchtrackerkmp.domain.repositories.ITermsRepo
 import com.mnessim.researchtrackerkmp.domain.repositories.PreferencesRepo
 import com.mnessim.researchtrackerkmp.domain.repositories.TermsRepo
 import com.mnessim.researchtrackerkmp.utils.notifications.NotificationManager
@@ -16,7 +17,7 @@ val databaseModule = module {
 }
 
 val termsRepoModule = module {
-    single<TermsRepo> {
+    single<ITermsRepo> {
         val database = get<Database>()
         TermsRepo(database)
     }

@@ -4,24 +4,32 @@ import com.mnessim.Database
 import com.mnessim.Terms
 import com.mnessim.researchtrackerkmp.domain.models.Term
 
-class TermsRepo(private val database: Database) {
+interface ITermsRepo {
+    fun getAllTerms(): List<Term>
+    fun getTermById(id: Long): Term?
+    fun insertTerm(term: String, locked: Boolean)
+    fun updateTerm(term: Term)
+    fun deleteTerm(id: Long)
+}
+
+open class TermsRepo(private val database: Database) : ITermsRepo {
     private val queries = database.termsDatabaseQueries
 
-    fun getAllTerms(): List<Term> {
+    override fun getAllTerms(): List<Term> {
         return queries.selectAll().executeAsList()
             .map { rowToTerm(it) }
     }
 
-    fun getTermById(id: Long): Term? {
+    override fun getTermById(id: Long): Term? {
         val row = queries.selectOne(id).executeAsOneOrNull() ?: return null
         return rowToTerm(row)
     }
 
-    fun insertTerm(term: String, locked: Boolean) {
+    override fun insertTerm(term: String, locked: Boolean) {
         queries.insertTerm(term, locked)
     }
 
-    fun updateTerm(term: Term) {
+    override fun updateTerm(term: Term) {
         queries.updateTerm(
             term = term.term,
             locked = term.locked,
@@ -29,7 +37,7 @@ class TermsRepo(private val database: Database) {
         )
     }
 
-    fun deleteTerm(id: Long) {
+    override fun deleteTerm(id: Long) {
         queries.deleteTerm(id)
     }
 
