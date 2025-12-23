@@ -135,6 +135,13 @@ fun App(startDestination: AppRoute = HomeRoute) {
     } // Scaffold
 } // App
 
+/**
+ * Update state and preferences when changing colorScheme
+ *
+ * @param repo Preferences repository for storing changes persistently
+ * @param colorScheme Selected scheme as a String
+ * @param onUpdate Callback to apply the new scheme
+ */
 fun onColorSchemeChange(
     repo: PreferencesRepo,
     colorScheme: String,
@@ -155,6 +162,12 @@ fun onColorSchemeChange(
     }
 }
 
+/**
+ * Loads the saved color scheme from preferences and applies it
+ *
+ * @param repo Preferences repository for retrieving the color scheme
+ * @param onUpdate Callback to apply the loaded color scheme
+ */
 fun loadColorScheme(
     repo: PreferencesRepo,
     onUpdate: (ColorScheme) -> Unit
