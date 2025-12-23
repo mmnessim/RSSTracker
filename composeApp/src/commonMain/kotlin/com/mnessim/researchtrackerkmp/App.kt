@@ -66,6 +66,8 @@ fun App(startDestination: AppRoute = HomeRoute) {
 
     val prefsRepo = koinInject<PreferencesRepo>()
     val manager = koinInject<NotificationManager>()
+    
+    print("recompile")
 
     LaunchedEffect(Unit) {
         NavigationEvents.navigateToDetails.collectLatest { id ->
