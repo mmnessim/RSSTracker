@@ -32,7 +32,8 @@ fun TermRow(
     term: Term,
     onDelete: () -> Unit,
     onToggleLock: () -> Unit,
-    onNavigate: (Long) -> Unit
+    onNavigate: (Long) -> Unit,
+    onNotificationButton: () -> Unit
 ) {
     Box(
         modifier = Modifier.clickable(onClick = { onNavigate(term.id) })
@@ -72,7 +73,7 @@ fun TermRow(
             ) // IconButton
             IconButton(
                 modifier = Modifier.testTag("TermNotificationsButton"),
-                onClick = {},
+                onClick = onNotificationButton,
                 content = {
                     Icon(
                         imageVector = Icons.Default.Notifications,

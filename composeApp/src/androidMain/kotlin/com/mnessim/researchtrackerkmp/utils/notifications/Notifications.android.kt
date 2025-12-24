@@ -16,7 +16,7 @@ actual class NotificationManager actual constructor() {
         this.context = context
     }
 
-    actual fun showNotification(title: String, message: String) {
+    actual fun showNotification(title: String, message: String, id: Long) {
         val channelId = "default_channel"
         val manager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as AndroidNotificationManager
@@ -32,7 +32,7 @@ actual class NotificationManager actual constructor() {
 
         val intent = Intent(context, MainActivity::class.java).apply {
             putExtra("navigate_to", "details")
-            putExtra("details_id", 1L)
+            putExtra("details_id", id)
         }
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         val pendingIntent = PendingIntent.getActivity(

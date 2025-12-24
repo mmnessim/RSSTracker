@@ -66,8 +66,7 @@ fun App(startDestination: AppRoute = HomeRoute) {
     }
 
     loadColorScheme(prefsRepo, { it -> colorScheme = it })
-
-
+    
     Scaffold(
         topBar = {
             AppBar(
@@ -75,7 +74,7 @@ fun App(startDestination: AppRoute = HomeRoute) {
                 canPop = canPop,
                 onNavigate = { navController.popBackStack() },
                 onChangeColorScheme = { showColorSchemeDialog = true },
-                onNotificationButton = { manager.showNotification("Test", "test") }
+                onNotificationButton = { manager.showNotification("Test", "test", 1) }
             ) // AppBar
         } // topBar =
     ) { innerPadding ->
@@ -114,7 +113,15 @@ fun App(startDestination: AppRoute = HomeRoute) {
                                 .padding(innerPadding)
                                 .fillMaxSize()
                                 .background(MaterialTheme.colorScheme.primaryContainer),
-                            onNavigate = { id -> navController.navigate(DetailsRoute(id)) })
+                            onNavigate = { id -> navController.navigate(DetailsRoute(id)) },
+                            onNotificationButton = { term ->
+                                manager.showNotification(
+                                    title = term.term,
+                                    message = "Tap to see more",
+                                    id = term.id
+                                )
+                            }
+                        )
                     } // composable<Home>
                     composable<DetailsRoute> { backStackEntry ->
                         val details: DetailsRoute = backStackEntry.toRoute<DetailsRoute>()

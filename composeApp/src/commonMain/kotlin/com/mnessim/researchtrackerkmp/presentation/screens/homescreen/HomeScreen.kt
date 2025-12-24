@@ -16,6 +16,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.mnessim.researchtrackerkmp.domain.models.Term
 import com.mnessim.researchtrackerkmp.domain.repositories.ITermsRepo
 import org.koin.compose.koinInject
 
@@ -24,6 +25,7 @@ import org.koin.compose.koinInject
 fun HomeScreen(
     modifier: Modifier = Modifier,
     onNavigate: (Long) -> Unit,
+    onNotificationButton: (Term) -> Unit,
 ) {
     val repo = koinInject<ITermsRepo>()
     val viewmodel = remember { HomeScreenViewModel(repo) }
@@ -43,6 +45,7 @@ fun HomeScreen(
                     onDelete = { viewmodel.removeTerm(term.id) },
                     onToggleLock = { viewmodel.toggleLocked(term) },
                     onNavigate = { id -> onNavigate(id) },
+                    onNotificationButton = { onNotificationButton(term) },
                     modifier = Modifier
                         .then(
                             if (index < terms.lastIndex) Modifier.padding(bottom = 8.dp) else Modifier

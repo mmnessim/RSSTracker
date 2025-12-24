@@ -20,14 +20,14 @@ fun Map<String, Any?>.toNSDictionary(): NSDictionary {
 }
 
 actual class NotificationManager actual constructor() {
-    actual fun showNotification(title: String, message: String) {
+    actual fun showNotification(title: String, message: String, id: Long) {
         val content = UNMutableNotificationContent().apply {
             setTitle(title)
             setBody(message)
             setUserInfo(
                 mapOf(
                     "navigate_to" to "details",
-                    "details_id" to 1L
+                    "details_id" to id
                 )
             )
         }

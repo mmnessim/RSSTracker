@@ -12,7 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.mnessim.researchtrackerkmp.domain.repositories.TermsRepo
+import com.mnessim.researchtrackerkmp.domain.repositories.ITermsRepo
 import org.koin.compose.koinInject
 
 @Composable
@@ -21,7 +21,7 @@ fun DetailsScreen(
     onBack: () -> Unit,
     id: Long
 ) {
-    val repo = koinInject<TermsRepo>()
+    val repo = koinInject<ITermsRepo>()
     val term = repo.getTermById(id)
     Column(
         modifier = modifier

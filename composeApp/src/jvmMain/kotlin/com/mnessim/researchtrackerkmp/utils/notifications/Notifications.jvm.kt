@@ -6,7 +6,7 @@ import java.awt.TrayIcon
 import java.awt.TrayIcon.MessageType
 
 actual class NotificationManager {
-    actual fun showNotification(title: String, message: String) {
+    actual fun showNotification(title: String, message: String, id: Long) {
         if (!SystemTray.isSupported()) return
 
         val tray = SystemTray.getSystemTray()
