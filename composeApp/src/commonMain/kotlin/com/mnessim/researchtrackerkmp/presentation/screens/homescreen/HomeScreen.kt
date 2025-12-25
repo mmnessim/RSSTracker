@@ -1,12 +1,9 @@
 package com.mnessim.researchtrackerkmp.presentation.screens.homescreen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.input.clearText
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -33,12 +30,15 @@ fun HomeScreen(
     var showAlertDialog by remember { mutableStateOf(false) }
     Column(
         modifier = modifier
-            .background(MaterialTheme.colorScheme.primaryContainer)
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+        Column(
+//            modifier = Modifier.background(MaterialTheme.colorScheme.surface),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
             for ((index, term) in terms.withIndex()) {
                 TermRow(
                     term = term,
@@ -46,10 +46,6 @@ fun HomeScreen(
                     onToggleLock = { viewmodel.toggleLocked(term) },
                     onNavigate = { id -> onNavigate(id) },
                     onNotificationButton = { onNotificationButton(term) },
-                    modifier = Modifier
-                        .then(
-                            if (index < terms.lastIndex) Modifier.padding(bottom = 8.dp) else Modifier
-                        )
                 )
             }
         } // Column

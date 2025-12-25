@@ -36,19 +36,22 @@ fun TermRow(
     onNotificationButton: () -> Unit
 ) {
     Box(
-        modifier = Modifier.clickable(onClick = { onNavigate(term.id) })
-            .background(color = MaterialTheme.colorScheme.secondaryContainer)
+        modifier = modifier.clickable(onClick = { onNavigate(term.id) })
+            .background(
+                color = MaterialTheme.colorScheme.secondaryContainer,
+                shape = RoundedCornerShape(8.dp)
+            )
+            .border(
+                width = 2.dp,
+                color = MaterialTheme.colorScheme.onSurface,
+                shape = RoundedCornerShape(8.dp)
+            )
+            .padding(horizontal = 8.dp, vertical = 4.dp)
     ) {
         Row(
-            modifier = modifier
+            modifier = Modifier
                 .testTag("TermRow")
-                .fillMaxWidth(.9f)
-                .border(
-                    width = 1.dp,
-                    color = MaterialTheme.colorScheme.primary,
-                    shape = RoundedCornerShape(8.dp)
-                )
-                .padding(horizontal = 8.dp, vertical = 4.dp),
+                .fillMaxWidth(.9f),
 
             verticalAlignment = Alignment.CenterVertically,
         ) {

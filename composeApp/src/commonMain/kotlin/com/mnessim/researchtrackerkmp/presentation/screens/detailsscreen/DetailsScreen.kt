@@ -1,6 +1,5 @@
 package com.mnessim.researchtrackerkmp.presentation.screens.detailsscreen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -40,7 +39,6 @@ fun DetailsScreen(
 
     Column(
         modifier = modifier
-            .background(MaterialTheme.colorScheme.primaryContainer)
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
@@ -53,7 +51,7 @@ fun DetailsScreen(
                 Text(
                     text = term.term,
                     style = TextStyle(
-                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        color = MaterialTheme.colorScheme.onSurface,
                         fontSize = 20.sp
                     )
                 )
@@ -84,14 +82,14 @@ fun ArticleTile(article: Article) {
     Text(
         text = "${article.title} - ${article.creator}",
         style = TextStyle(
-            color = MaterialTheme.colorScheme.onPrimaryContainer,
+            color = MaterialTheme.colorScheme.onSurface,
             fontSize = (baseFontSize + 8).sp
         )
     )
     Text(
         text = article.description,
         style = TextStyle(
-            color = MaterialTheme.colorScheme.onPrimaryContainer,
+            color = MaterialTheme.colorScheme.onSurface,
             fontSize = (baseFontSize).sp
         )
     )
@@ -99,7 +97,7 @@ fun ArticleTile(article: Article) {
         Text(
             text = c,
             style = TextStyle(
-                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontSize = (baseFontSize).sp
             )
         )

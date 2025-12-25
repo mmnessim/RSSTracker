@@ -31,11 +31,11 @@ fun AppBar(
 ) {
     TopAppBar(
         colors = TopAppBarColors(
-            containerColor = colorScheme.primaryContainer,
-            scrolledContainerColor = colorScheme.primaryContainer,
-            navigationIconContentColor = colorScheme.onPrimaryContainer,
-            titleContentColor = colorScheme.onPrimaryContainer,
-            actionIconContentColor = colorScheme.onPrimaryContainer
+            containerColor = colorScheme.surfaceContainer,
+            scrolledContainerColor = colorScheme.surfaceContainer,
+            navigationIconContentColor = colorScheme.onSurface,
+            titleContentColor = colorScheme.onSurface,
+            actionIconContentColor = colorScheme.onSurface
         ), // colors =
         title = { Text("Research Tracker") },
         navigationIcon = if (canPop) {

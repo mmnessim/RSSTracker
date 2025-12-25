@@ -112,7 +112,7 @@ fun App(startDestination: AppRoute = HomeRoute) {
             Box(
                 modifier = Modifier
                     .fillMaxSize()
-                    .background(MaterialTheme.colorScheme.primaryContainer)
+                    .background(MaterialTheme.colorScheme.surfaceContainer)
             ) {
                 NavHost(
                     navController = navController,
@@ -127,7 +127,7 @@ fun App(startDestination: AppRoute = HomeRoute) {
                             modifier = Modifier
                                 .padding(innerPadding)
                                 .fillMaxSize()
-                                .background(MaterialTheme.colorScheme.primaryContainer),
+                                .background(MaterialTheme.colorScheme.surfaceContainer),
                             onNavigate = { id -> navController.navigate(DetailsRoute(id)) },
                             onNotificationButton = { term ->
                                 manager.showNotification(
@@ -144,7 +144,7 @@ fun App(startDestination: AppRoute = HomeRoute) {
                             modifier = Modifier
                                 .padding(innerPadding)
                                 .fillMaxSize()
-                                .background(MaterialTheme.colorScheme.primaryContainer),
+                                .background(MaterialTheme.colorScheme.surfaceContainer),
                             onBack = {
                                 navController.navigate(HomeRoute)
                             },
