@@ -20,12 +20,16 @@ class DetailsScreenViewModel(
     private var _response = MutableStateFlow<List<Article>>(emptyList())
     val response: StateFlow<List<Article>> = _response.asStateFlow()
 
+    private var _loading = MutableStateFlow<Boolean>(true)
+    val loading: StateFlow<Boolean> = _loading.asStateFlow()
+
     var term: Term = termsRepo.getTermById(id) ?: Term(-1, "Error Loading Term", false)
 
     fun fetch() {
         viewModelScope.launch {
             println("API called")
             _response.value = apiService.search(term.term)
+            _loading.value = false
         }
     }
 
