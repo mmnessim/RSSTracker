@@ -40,7 +40,7 @@ fun NavTilesScreen(
     modifier: Modifier = Modifier,
     onHome: () -> Unit,
 ) {
-    var showAlert = remember { mutableStateOf(false) }
+    val showAlert = remember { mutableStateOf(false) }
 
     Column(
         modifier = modifier
@@ -51,7 +51,7 @@ fun NavTilesScreen(
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+            horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
         ) {
             NavTile(title = "Terms", onClick = onHome, tileIcon = {
                 Icon(
@@ -72,7 +72,7 @@ fun NavTilesScreen(
         }
         Row(
             modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+            horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
         ) {
             NavTile(title = "Options", onClick = { showAlert.value = true }, tileIcon = {
                 Icon(
