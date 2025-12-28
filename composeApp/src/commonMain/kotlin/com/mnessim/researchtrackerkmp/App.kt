@@ -99,12 +99,13 @@ fun App(startDestination: AppRoute = NavTilesRoute) {
 
             if (showColorSchemeDialog) {
                 ColorSchemeDialog(
+                    activeScheme = colorScheme,
                     onDismiss = { showColorSchemeDialog = false },
                     onColorSchemeChange = { it ->
                         onColorSchemeChange(
                             prefsRepo, it, { it -> colorScheme = it }
                         )
-                    }
+                    },
                 ) // ColorSchemeDialog
             } // if (showColorSchemeDialog)
 
