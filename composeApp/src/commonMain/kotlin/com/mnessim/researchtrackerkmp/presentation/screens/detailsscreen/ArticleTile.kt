@@ -60,6 +60,7 @@ fun ArticleTile(modifier: Modifier = Modifier, article: Article) {
                     fontSize = (baseFontSize).sp
                 )
             )
+            // 2 Minute Medicine puts raw HTML in article.description
             if (article.rssSource != "2 Minute Medicine") {
                 Text(
                     text = article.description ?: "",
