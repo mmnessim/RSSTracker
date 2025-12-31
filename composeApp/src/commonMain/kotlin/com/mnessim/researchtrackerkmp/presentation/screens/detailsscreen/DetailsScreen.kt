@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -116,7 +116,9 @@ fun DetailsScreen(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.spacedBy(4.dp)
             ) {
-                items(articles.value.take(showAmount), key = { it.guid }) { a ->
+                itemsIndexed(
+                    articles.value.take(showAmount),
+                    key = { index, a -> a.guid ?: "${a.link}-$index" }) { i, a ->
 
                     ArticleTile(
                         modifier = Modifier.border(
@@ -124,7 +126,7 @@ fun DetailsScreen(
                             color = MaterialTheme.colorScheme.primary,
                             shape = RoundedCornerShape(8.dp)
                         ).testTag("ArticleTile"),
-                        article = a
+                        article = a,
                     )
 
                 }
