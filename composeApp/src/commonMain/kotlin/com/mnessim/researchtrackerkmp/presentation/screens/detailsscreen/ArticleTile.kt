@@ -67,7 +67,7 @@ fun ArticleTile(modifier: Modifier = Modifier, article: Article) {
             // 2 Minute Medicine puts raw HTML in article.description
             if (article.rssSource != "2 Minute Medicine") {
                 Text(
-                    text = article.description ?: "",
+                    text = truncateText(article.description, 500),
                     style = TextStyle(
                         color = MaterialTheme.colorScheme.onSurface,
                         fontSize = (baseFontSize).sp
@@ -98,6 +98,7 @@ fun ArticleTile(modifier: Modifier = Modifier, article: Article) {
                 }
             }
 
+            // TODO: This is almost always null, so maybe just remove it?
             if (article.mediaContentUrl != null) {
                 AsyncImage(
                     model = article.mediaContentUrl,
@@ -112,6 +113,15 @@ fun ArticleTile(modifier: Modifier = Modifier, article: Article) {
     }
 }
 
+
+fun truncateText(text: String?, maxChars: Int): String {
+    if (text == null) return ""
+    if (text.length <= maxChars) return text
+    val trimmed = text.take(maxChars).trimEnd()
+    val lastSpace = trimmed.lastIndexOf(' ')
+    val trimmedToLastWord = trimmed.take(lastSpace)
+    return "$trimmedToLastWord..."
+}
 
 @OptIn(ExperimentalTime::class)
 fun parseRfc822ToInstant(dateString: String): Instant? {

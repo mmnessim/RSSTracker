@@ -12,3 +12,6 @@ data class DetailsRoute(val id: Long) : AppRoute
 
 @Serializable
 object NavTilesRoute : AppRoute
+
+@Serializable
+object OptionsRoute : AppRoute

@@ -39,6 +39,7 @@ import org.jetbrains.compose.ui.tooling.preview.Preview
 fun NavTilesScreen(
     modifier: Modifier = Modifier,
     onHome: () -> Unit,
+    onOptions: () -> Unit,
 ) {
     val showAlert = remember { mutableStateOf(false) }
 
@@ -74,7 +75,7 @@ fun NavTilesScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
         ) {
-            NavTile(title = "Options", onClick = { showAlert.value = true }, tileIcon = {
+            NavTile(title = "Options", onClick = onOptions, tileIcon = {
                 Icon(
                     imageVector = Icons.Default.Settings,
                     contentDescription = "Settings",
@@ -156,5 +157,5 @@ fun NavTile(
 @Preview(showBackground = true)
 @Composable
 fun NavTilesScreenPreview() {
-    NavTilesScreen(onHome = {})
+    NavTilesScreen(onHome = {}, onOptions = {})
 }
