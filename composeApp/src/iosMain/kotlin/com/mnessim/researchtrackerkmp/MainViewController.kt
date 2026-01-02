@@ -2,6 +2,7 @@ package com.mnessim.researchtrackerkmp
 
 import androidx.compose.ui.window.ComposeUIViewController
 import com.mnessim.researchtrackerkmp.domain.data.DBFactory
+import com.mnessim.researchtrackerkmp.domain.services.WorkService
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import org.koin.core.context.startKoin
@@ -15,6 +16,7 @@ import platform.UserNotifications.UNUserNotificationCenter
 fun MainViewController(detailsId: NSNumber? = null) = ComposeUIViewController {
     val iosPlatformModule = module {
         single<DBFactory> { DBFactory() }
+        single<WorkService> { WorkService() }
     }
     startKoin {
         modules(commonModules + iosPlatformModule)
@@ -24,7 +26,7 @@ fun MainViewController(detailsId: NSNumber? = null) = ComposeUIViewController {
         requestNotificationPermissions()
     }
 
-    App(startDestination = if (detailsId == null) HomeRoute else DetailsRoute(id = detailsId.longValue))
+    App(startDestination = if (detailsId == null) NavTilesRoute else DetailsRoute(id = detailsId.longValue))
 }
 
 fun requestNotificationPermissions() {
