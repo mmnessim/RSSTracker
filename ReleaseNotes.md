@@ -1,6 +1,14 @@
 # Release Notes
 
-## Upcoming Release - Version 1.0.6
+## Upcoming Release - Version 1.0.7
+
+### Features:
+
+- About screen with version info and dev contact info
+
+## Previous Release - Version 1.0.6 - January 4, 2026
+
+Released to internal testers on Android and iOS
 
 ### Features:
 

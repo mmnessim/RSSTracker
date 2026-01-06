@@ -4,8 +4,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
@@ -13,12 +11,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import coil3.compose.AsyncImage
 import com.mnessim.researchtrackerkmp.domain.models.Article
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
@@ -96,18 +92,6 @@ fun ArticleTile(modifier: Modifier = Modifier, article: Article) {
                         )
                     }
                 }
-            }
-
-            // TODO: This is almost always null, so maybe just remove it?
-            if (article.mediaContentUrl != null) {
-                AsyncImage(
-                    model = article.mediaContentUrl,
-                    contentDescription = article.mediaDescription,
-                    modifier = Modifier
-                        .fillMaxWidth(.9f)
-                        .height(150.dp),
-                    contentScale = ContentScale.Crop
-                )
             }
         }
     }

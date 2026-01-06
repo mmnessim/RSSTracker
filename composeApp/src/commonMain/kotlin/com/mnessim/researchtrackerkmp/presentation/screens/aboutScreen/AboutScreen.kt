@@ -73,5 +73,7 @@ fun AboutScreen(
                 color = MaterialTheme.colorScheme.onSurface,
             )
         )
+        // TODO: Add github link and launch url
+        // Maybe add a feedback form or something
     }
 }
