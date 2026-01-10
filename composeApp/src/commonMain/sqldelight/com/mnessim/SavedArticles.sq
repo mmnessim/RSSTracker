@@ -1,0 +1,27 @@
+CREATE TABLE SavedArticles (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    rssSource TEXT NOT NULL,
+    title TEXT NOT NULL,
+    link TEXT NOT NULL,
+    guid TEXT,
+    description TEXT,
+    pubDate TEXT,
+    pubDateMs INTEGER,
+    categories TEXT
+);
+
+insertArtricle:
+INSERT INTO SavedArticles(rssSource, title, link,
+guid, description, pubDate, pubDateMs, categories)
+VALUES (?,?,?,?,?,?,?,?);
+
+deleteArticle:
+DELETE FROM SavedArticles
+WHERE title = ?;
+
+getAllArticles:
+SELECT * FROM SavedArticles;
+
+getOneArticle:
+SELECT * FROM SavedArticles
+WHERE guid = ?;

@@ -4,6 +4,7 @@ import com.mnessim.Database
 import com.mnessim.researchtrackerkmp.domain.data.DBFactory
 import com.mnessim.researchtrackerkmp.domain.repositories.ITermsRepo
 import com.mnessim.researchtrackerkmp.domain.repositories.PreferencesRepo
+import com.mnessim.researchtrackerkmp.domain.repositories.SavedArticlesRepo
 import com.mnessim.researchtrackerkmp.domain.repositories.TermsRepo
 import com.mnessim.researchtrackerkmp.domain.services.ColorSchemeService
 import com.mnessim.researchtrackerkmp.domain.services.HttpClientProvider
@@ -48,6 +49,13 @@ val colorModule = module {
     }
 }
 
+val savedArticlesModule = module {
+    single<SavedArticlesRepo> {
+        val database = get<Database>()
+        SavedArticlesRepo(database)
+    }
+}
+
 
 val commonModules: List<Module> = listOf(
     databaseModule,
@@ -56,6 +64,7 @@ val commonModules: List<Module> = listOf(
     notificationsModule,
     clientModule,
     colorModule,
+    savedArticlesModule
 )
 
 //fun initKoin(vararg platformModules: Module) {

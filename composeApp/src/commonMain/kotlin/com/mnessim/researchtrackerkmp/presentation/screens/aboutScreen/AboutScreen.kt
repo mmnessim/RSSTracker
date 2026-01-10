@@ -60,7 +60,7 @@ fun AboutScreen(
         }
         Row {
             Text(
-                text = "Current app version: ${ConfigFlags.AppVersion}",
+                text = "Current app version: ${ConfigFlags.APP_VERSION}",
                 style = TextStyle(color = MaterialTheme.colorScheme.onSurface)
             )
         }

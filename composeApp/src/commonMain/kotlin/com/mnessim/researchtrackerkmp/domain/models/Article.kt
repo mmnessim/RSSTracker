@@ -4,6 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Article(
+    val id: Long?,
     val rssSource: String,
     val title: String,
     val link: String,

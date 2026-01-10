@@ -1,0 +1,11 @@
+CREATE TABLE SavedArticles (
+    id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
+    rssSource TEXT NOT NULL,
+    title TEXT NOT NULL,
+    link TEXT NOT NULL,
+    guid TEXT,
+    description TEXT,
+    pubDate TEXT,
+    pubDateMs INTEGER,
+    categories TEXT
+);

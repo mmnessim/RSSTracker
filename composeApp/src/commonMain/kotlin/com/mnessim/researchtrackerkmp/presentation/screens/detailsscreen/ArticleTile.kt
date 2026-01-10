@@ -7,17 +7,31 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.SelectionContainer
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Bookmark
+import androidx.compose.material.icons.filled.BookmarkBorder
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mnessim.researchtrackerkmp.domain.models.Article
+import com.mnessim.researchtrackerkmp.domain.repositories.SavedArticlesRepo
 import kotlinx.datetime.TimeZone
 import kotlinx.datetime.toLocalDateTime
+import org.koin.compose.koinInject
 import kotlin.time.ExperimentalTime
 import kotlin.time.Instant
 
@@ -25,6 +39,9 @@ import kotlin.time.Instant
 @OptIn(ExperimentalTime::class)
 @Composable
 fun ArticleTile(modifier: Modifier = Modifier, article: Article) {
+    val savedArticlesRepo = koinInject<SavedArticlesRepo>()
+    var isSaved by remember { mutableStateOf(false) }
+
     val baseFontSize = 16
 
     // Ktor datetime handling
@@ -44,6 +61,11 @@ fun ArticleTile(modifier: Modifier = Modifier, article: Article) {
         timeStr
     } else rustTime
 
+    LaunchedEffect(Unit) {
+        val article = savedArticlesRepo.getOneArticle(article.guid)
+        isSaved = article != null
+    }
+
     SelectionContainer {
         Column(
             modifier = modifier.padding(8.dp)
@@ -51,13 +73,39 @@ fun ArticleTile(modifier: Modifier = Modifier, article: Article) {
                     onClick = { urlHandler.openUri(article.link) }
                 )
         ) {
-            Text(
-                text = "${article.title} - ${article.rssSource}",
-                style = TextStyle(
-                    color = MaterialTheme.colorScheme.onSurface,
-                    fontSize = (baseFontSize + 8).sp
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(end = 8.dp)
+                        .clickable { urlHandler.openUri(article.link) },
+                    text = "${article.title} - ${article.rssSource}",
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    style = TextStyle(
+                        color = MaterialTheme.colorScheme.onSurface,
+                        fontSize = (baseFontSize + 8).sp
+                    )
                 )
-            )
+
+                IconButton(
+                    onClick = {
+                        if (!isSaved) {
+                            saveArticle(savedArticlesRepo, article)
+                            isSaved = true
+                        } else {
+                            unsaveArticle(savedArticlesRepo, article)
+                            isSaved = false
+                        }
+                    }
+                ) {
+                    Icon(
+                        imageVector = if (isSaved) Icons.Filled.Bookmark else Icons.Default.BookmarkBorder,
+                        contentDescription = "Save Article",
+                        tint = MaterialTheme.colorScheme.onSurface
+                    )
+                }
+            }
             Text(
                 text = actualTimeString,
                 style = TextStyle(
@@ -102,6 +150,13 @@ fun ArticleTile(modifier: Modifier = Modifier, article: Article) {
     }
 }
 
+fun saveArticle(savedArticlesRepo: SavedArticlesRepo, article: Article) {
+    savedArticlesRepo.insertArticle(article)
+}
+
+fun unsaveArticle(savedArticlesRepo: SavedArticlesRepo, article: Article) {
+    savedArticlesRepo.deleteArticle(article.title)
+}
 
 fun truncateText(text: String?, maxChars: Int): String {
     if (text.isNullOrEmpty() || maxChars <= 0) return ""
