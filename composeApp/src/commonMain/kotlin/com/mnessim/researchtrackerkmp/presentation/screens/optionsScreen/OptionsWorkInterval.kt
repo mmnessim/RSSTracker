@@ -42,7 +42,7 @@ fun OptionsWorkInterval(
     val workService = koinInject<WorkService>()
     val prefsRepo = koinInject<PreferencesRepo>()
 
-    val options = listOf(15, 30, 45, 60, 120, 300, 480, 720) // 15m,30m,45m,1h,2h,5h,8h,12h
+    val options = listOf(15, 30, 45, 60, 120, 300, 480, 720)
     var intervalIndex by remember { mutableStateOf(0f) }
     var isSaved by remember { mutableStateOf(true) }
     var isSavedUI by remember { mutableStateOf(true) }

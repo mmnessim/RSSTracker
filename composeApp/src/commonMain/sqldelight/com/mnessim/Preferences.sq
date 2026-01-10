@@ -4,7 +4,7 @@ CREATE TABLE Preferences (
 );
 
 insertPreference:
-INSERT INTO Preferences(key, value)
+INSERT OR REPLACE INTO Preferences(key, value)
 VALUES (?, ?);
 
 updatePreference:

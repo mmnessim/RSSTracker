@@ -4,6 +4,7 @@ import com.mnessim.researchtrackerkmp.domain.models.Term
 import com.mnessim.researchtrackerkmp.domain.repositories.ITermsRepo
 import com.mnessim.researchtrackerkmp.utils.notifications.NotificationManager
 import io.ktor.client.HttpClient
+import kotlinx.atomicfu.atomic
 import kotlinx.cinterop.ExperimentalForeignApi
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -16,6 +17,7 @@ import platform.BackgroundTasks.BGAppRefreshTaskRequest
 import platform.BackgroundTasks.BGTaskScheduler
 import platform.Foundation.NSDate
 import platform.Foundation.dateByAddingTimeInterval
+import platform.darwin.dispatch_get_main_queue
 
 @Suppress(names = ["EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING"])
 actual class WorkService : KoinComponent {
@@ -25,23 +27,31 @@ actual class WorkService : KoinComponent {
     private val manager by inject<NotificationManager>()
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
+    companion object {
+        private val bgTaskRegistered = atomic(0)
+        private const val TASK_ID = "com.mnessim.researchtrackerkmp.fetch"
+    }
+
     actual fun scheduleWork(
         tag: String,
         periodic: Boolean,
         intervalMinutes: Long
     ) {
-        BGTaskScheduler.sharedScheduler.registerForTaskWithIdentifier(
-            identifier = "com.mnessim.researchtrackerkmp.fetch",
-            usingQueue = null
-        ) { task ->
-            println("Refreshing GUIDs")
-            scope.launch {
-                performWork()
-            }
+        if (bgTaskRegistered.compareAndSet(expect = 0, update = 1)) {
+            BGTaskScheduler.sharedScheduler.registerForTaskWithIdentifier(
+                identifier = "com.mnessim.researchtrackerkmp.fetch",
+                usingQueue = dispatch_get_main_queue()
+            ) { task ->
+                println("Refreshing GUIDs")
+                scope.launch {
+                    performWork()
+                }
 
-            scheduleAppRefreshTask()
-            (task as? BGAppRefreshTask)?.setTaskCompletedWithSuccess(true)
+                scheduleAppRefreshTask(intervalMinutes)
+                (task as? BGAppRefreshTask)?.setTaskCompletedWithSuccess(true)
+            }
         }
+        scheduleAppRefreshTask(intervalMinutes)
 
     }
 
@@ -80,11 +90,11 @@ actual class WorkService : KoinComponent {
     }
 
     @OptIn(ExperimentalForeignApi::class)
-    private fun scheduleAppRefreshTask() {
+    private fun scheduleAppRefreshTask(intervalMinutes: Long) {
         val request =
-            BGAppRefreshTaskRequest(identifier = "com.mnessim.researchtrackerkmp.processing")
+            BGAppRefreshTaskRequest(identifier = TASK_ID)
         request.earliestBeginDate =
-            NSDate().dateByAddingTimeInterval((15 * 60).toDouble()) // 15 minutes
+            NSDate().dateByAddingTimeInterval((intervalMinutes * 60).toDouble()) // 15 minutes
         BGTaskScheduler.sharedScheduler.submitTaskRequest(request, null)
     }
 

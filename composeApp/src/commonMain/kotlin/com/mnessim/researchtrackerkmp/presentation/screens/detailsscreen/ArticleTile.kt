@@ -98,7 +98,7 @@ fun ArticleTile(modifier: Modifier = Modifier, article: Article) {
                             isSaved = true
                         } else {
                             showAlert = true
-                            isSaved = false
+//                            isSaved = false
                         }
                     }
                 ) {
@@ -159,6 +159,7 @@ fun ArticleTile(modifier: Modifier = Modifier, article: Article) {
             },
             onConfirm = {
                 showAlert = false
+                isSaved = false
                 unsaveArticle(savedArticlesRepo, article)
             }
         )
