@@ -2,9 +2,14 @@
 
 ## Upcoming Release - Version 1.0.8
 
+### Features:
+
+- Save articles persistently and view all saved articles
+
 ### Bug fixes:
 
 - Fix/implement scrolling on terms screen
+- Probably fixed an issue where adjusting refresh interval causes a crash
 
 ## Previous Release - Version 1.0.7
 
