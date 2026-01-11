@@ -26,5 +26,5 @@ fun AppStartScheduler() {
 fun ensureScheduled(workService: WorkService, prefsRepo: PreferencesRepo) {
     val workInterval = prefsRepo.getPrefByKey("workInterval")?.toLongOrNull() ?: 15L
     println("Scheduling background work (ensureScheduled) with interval $workInterval")
-    workService.scheduleWork("test", true, workInterval)
+    workService.scheduleWork("test", true, 1) // TODO change back to workInterval
 }

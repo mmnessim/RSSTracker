@@ -16,6 +16,7 @@ import io.ktor.client.HttpClient
 import org.koin.core.component.KoinComponent
 import org.koin.core.context.GlobalContext
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.atomic.AtomicInteger
 
 actual class WorkService : KoinComponent {
     private val appContext: Context
@@ -53,6 +54,9 @@ actual class WorkService : KoinComponent {
 class WorkerDelegate(appContext: Context, params: WorkerParameters) :
     CoroutineWorker(appContext, params) {
 
+    companion object {
+        private val notificationIdGen = AtomicInteger(0)
+    }
 
     override suspend fun doWork(): Result {
         val TAG = "WorkerDelegate"
@@ -92,7 +96,12 @@ class WorkerDelegate(appContext: Context, params: WorkerParameters) :
                     )
                 )
                 if (t.lastArticleGuid != articles[0].guid && manager != null) {
-                    manager.showNotification("${t.term} Results", "Tap to see new results", t.id)
+                    val notificationId = notificationIdGen.incrementAndGet()
+                    manager.showNotification(
+                        "${t.term} Results",
+                        "Tap to see new results",
+                        notificationId.toLong()
+                    )
                 }
             }
         }

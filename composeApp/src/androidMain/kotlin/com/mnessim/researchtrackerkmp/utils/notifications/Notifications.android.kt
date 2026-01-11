@@ -12,21 +12,30 @@ import android.app.NotificationManager as AndroidNotificationManager
 actual class NotificationManager actual constructor() {
     private lateinit var context: Context
 
+    companion object {
+        private const val CHANNEL_ID = "research_tracker_channel"
+        private const val CHANNEL_NAME = "ResearchTracker"
+        private const val CHANNEL_DESC = "ResearchTracker notifications"
+    }
+
     fun init(context: Context) {
         this.context = context
     }
 
+    private fun createChannel() {}
+
     actual fun showNotification(title: String, message: String, id: Long) {
-        val channelId = "default_channel"
         val manager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as AndroidNotificationManager
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
-                channelId,
-                "Default",
+                CHANNEL_ID,
+                CHANNEL_NAME,
                 AndroidNotificationManager.IMPORTANCE_HIGH
-            )
+            ).apply {
+                description = CHANNEL_DESC
+            }
             manager.createNotificationChannel(channel)
         }
 
@@ -39,7 +48,7 @@ actual class NotificationManager actual constructor() {
             context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
         )
 
-        val notification = NotificationCompat.Builder(context, channelId)
+        val notification = NotificationCompat.Builder(context, CHANNEL_ID)
             .setContentTitle(title)
             .setContentText(message)
             .setSmallIcon(android.R.drawable.ic_dialog_info)
@@ -47,6 +56,6 @@ actual class NotificationManager actual constructor() {
             .setAutoCancel(true)
             .build()
 
-        manager.notify(1, notification)
+        manager.notify(id.toInt(), notification)
     }
 }
