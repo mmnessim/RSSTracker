@@ -40,7 +40,8 @@ import org.koin.compose.koinInject
 fun DetailsScreen(
     modifier: Modifier = Modifier,
     onBack: () -> Unit,
-    id: Long
+    id: Long,
+    onError: () -> Unit,
 ) {
     val repo = koinInject<ITermsRepo>()
     val client = koinInject<HttpClient>()
@@ -55,6 +56,10 @@ fun DetailsScreen(
     val articles = viewModel.response.collectAsState()
     val loading = viewModel.loading.collectAsState()
     val term = viewModel.term
+
+    if (term.id == -1L) {
+        onError()
+    }
 
     var showAmount by remember { mutableStateOf(50) }
 

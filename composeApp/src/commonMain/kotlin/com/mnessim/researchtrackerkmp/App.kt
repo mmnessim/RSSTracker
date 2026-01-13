@@ -153,7 +153,10 @@ fun App(startDestination: AppRoute = NavTilesRoute) {
                             onBack = {
                                 navController.navigate(HomeRoute)
                             },
-                            id = details.id
+                            id = details.id,
+                            onError = {
+                                navController.navigate(HomeRoute)
+                            }
                         )
                     } // composable<Details>
                     composable<NavTilesRoute> {
