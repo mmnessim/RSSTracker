@@ -11,6 +11,9 @@
 ### Bug fixes:
 
 - Fix tapping notifications not routing to correct Details screen
+- Fix crashing on iOS when rotating to landscape
+- Mitigate error when launching from notification on Android, navigate to home screen instead of
+  error
 
 ### iOS Rework:
 

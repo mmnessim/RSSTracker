@@ -17,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.TextStyle
@@ -27,6 +28,7 @@ import com.mnessim.researchtrackerkmp.ConfigFlags
 import com.mnessim.researchtrackerkmp.domain.models.Stats
 import com.mnessim.researchtrackerkmp.domain.repositories.PreferencesRepo
 import com.mnessim.researchtrackerkmp.domain.services.ApiService
+import com.mnessim.researchtrackerkmp.isIos
 import io.ktor.client.HttpClient
 import org.koin.compose.koinInject
 
@@ -50,17 +52,24 @@ fun AboutScreen(
     Column(
         modifier = modifier
             .padding(12.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp)
+        verticalArrangement = Arrangement.spacedBy(12.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row {
+        // TODO handle differences with isIos flag
+        if (isIos) {
             Text(
-                text = "Developed by Mounir Nessim",
+                text = "App version: ${ConfigFlags.APP_VERSION}/iOS",
+                style = TextStyle(color = MaterialTheme.colorScheme.onSurface)
+            )
+        } else {
+            Text(
+                text = "App version: ${ConfigFlags.APP_VERSION}/Android",
                 style = TextStyle(color = MaterialTheme.colorScheme.onSurface)
             )
         }
         Row {
             Text(
-                text = "Current app version: ${ConfigFlags.APP_VERSION}",
+                text = "Developed by Mounir Nessim",
                 style = TextStyle(color = MaterialTheme.colorScheme.onSurface)
             )
         }
@@ -127,7 +136,7 @@ fun AboutScreen(
             Text(
                 text = "View the code on Github",
                 style = TextStyle(
-                    color = MaterialTheme.colorScheme.onSurface,
+                    color = MaterialTheme.colorScheme.onSecondaryContainer,
                     textDecoration = TextDecoration.Underline,
                 )
             )
