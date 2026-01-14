@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
-import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,7 +25,6 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import com.mnessim.researchtrackerkmp.ConfigFlags
 import com.mnessim.researchtrackerkmp.domain.models.Stats
-import com.mnessim.researchtrackerkmp.domain.repositories.PreferencesRepo
 import com.mnessim.researchtrackerkmp.domain.services.ApiService
 import com.mnessim.researchtrackerkmp.isIos
 import io.ktor.client.HttpClient
@@ -39,14 +37,10 @@ fun AboutScreen(
     val client = koinInject<HttpClient>()
     val apiService = ApiService(client)
     var stats by remember { mutableStateOf<Stats?>(null) }
-    val prefsRepo = koinInject<PreferencesRepo>()
-    var rustUrl by remember { mutableStateOf("") }
-
     val uriHandler = LocalUriHandler.current
 
     LaunchedEffect(Unit) {
         stats = apiService.getStats()
-        rustUrl = prefsRepo.getPrefByKey("rustUrl") ?: ""
     }
 
     Column(
@@ -98,28 +92,6 @@ fun AboutScreen(
                 color = MaterialTheme.colorScheme.onSurface,
             )
         )
-        Button(
-            onClick = {
-                when (prefsRepo.getPrefByKey("rustUrl")) {
-                    null -> {
-                        prefsRepo.insertPref("rustUrl", "true")
-                        rustUrl = "true"
-                    }
-
-                    "true" -> {
-                        prefsRepo.updatePref("rustUrl", "false")
-                        rustUrl = "false"
-                    }
-
-                    else -> {
-                        prefsRepo.updatePref("rustUrl", "true")
-                        rustUrl = "true"
-                    }
-                }
-            }
-        ) {
-            Text("Experimental backend: $rustUrl")
-        }
         Row(
             modifier = Modifier
                 .clickable(

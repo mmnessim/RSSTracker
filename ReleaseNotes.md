@@ -4,9 +4,11 @@
 
 ### Features
 
-- TODO: Indicator for terms with new results
+- Indicator for terms with new results
+- Automatically checks each term for new results when visiting terms list
 - TODO: Improve design and information in About screen
-- TODO: Fully migrate to Rust backend, remove old backend
+- Fully migrate to Rust backend, remove old backend (should have slightly better performance and be
+  more stable)
 
 ### Bug fixes:
 
