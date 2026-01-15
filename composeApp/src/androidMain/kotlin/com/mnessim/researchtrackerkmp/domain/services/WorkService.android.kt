@@ -73,23 +73,23 @@ actual class WorkService : KoinComponent {
         for (t in terms) {
             println("Updating GUID for ${t.term}")
             val articles = apiService.search(t.term)
-            if (articles.isNotEmpty()) {
+            if (articles.isNotEmpty() && t.lastArticleGuid != articles[0].guid && manager != null) {
                 termsRepo.updateTerm(
                     Term(
                         id = t.id,
                         term = t.term,
                         locked = t.locked,
-                        lastArticleGuid = articles[0].guid
+                        lastArticleGuid = articles[0].guid,
+                        hasNewArticle = true
                     )
                 )
-                if (t.lastArticleGuid != articles[0].guid && manager != null) {
-//                    val notificationId = notificationIdGen.incrementAndGet()
-                    manager.showNotification(
-                        "New results for ${t.term.replaceFirstChar { it.uppercase() }}",
-                        "Tap to see new results",
-                        t.id
-                    )
-                }
+
+                manager.showNotification(
+                    "New results for ${t.term.replaceFirstChar { it.uppercase() }}",
+                    "Tap to see new results",
+                    t.id
+                )
+
             }
         }
 

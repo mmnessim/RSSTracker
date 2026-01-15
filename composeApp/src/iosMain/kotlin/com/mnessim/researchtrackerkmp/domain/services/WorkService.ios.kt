@@ -2,6 +2,7 @@ package com.mnessim.researchtrackerkmp.domain.services
 
 import com.mnessim.researchtrackerkmp.domain.models.Term
 import com.mnessim.researchtrackerkmp.domain.repositories.ITermsRepo
+import com.mnessim.researchtrackerkmp.domain.repositories.PreferencesRepo
 import com.mnessim.researchtrackerkmp.utils.notifications.NotificationManager
 import io.ktor.client.HttpClient
 import kotlinx.atomicfu.atomic
@@ -19,9 +20,13 @@ import platform.Foundation.NSDate
 import platform.Foundation.dateByAddingTimeInterval
 import platform.darwin.dispatch_get_main_queue
 
+/**
+ * WorkService has a very different iOS implementation compared to Android
+ */
 @Suppress(names = ["EXPECT_ACTUAL_CLASSIFIERS_ARE_IN_BETA_WARNING"])
 actual class WorkService : KoinComponent {
     private val termsRepo by inject<ITermsRepo>()
+    private val prefsRepo by inject<PreferencesRepo>()
     private val client by inject<HttpClient>()
     private val apiService = ApiService(client)
     private val manager by inject<NotificationManager>()
@@ -32,6 +37,12 @@ actual class WorkService : KoinComponent {
         private const val TASK_ID = "com.mnessim.researchtrackerkmp.fetch"
     }
 
+    /**
+     * scheduleWork both requests a background task with scheduleAppRefreshTask() and sets a reminder
+     * notification based on workInterval in prefs with schedulePeriodicReminders()
+     *
+     * Background tasks are unreliable on iOS, so period reminders are necessary
+     */
     actual fun scheduleWork(
         tag: String,
         periodic: Boolean,
@@ -52,13 +63,18 @@ actual class WorkService : KoinComponent {
             }
         }
         scheduleAppRefreshTask(intervalMinutes)
-        schedulePeriodicReminders(1L)
+        schedulePeriodicReminders(getWorkInterval())
 
     }
 
     actual fun cancelWork(tag: String) {
     }
 
+    /**
+     * performWork() cycles through all terms and checks for new results. It schedules notifications if new results
+     *
+     * It is not certain to be called by BGTaskScheduler on iOS
+     */
     actual suspend fun performWork(): Boolean {
         return try {
             val terms = termsRepo.getAllTerms()
@@ -66,27 +82,27 @@ actual class WorkService : KoinComponent {
             for (t in terms) {
                 println("Updating GUID for ${t.term}")
                 val articles = apiService.search(t.term)
-                if (articles.isNotEmpty()) {
+                if (articles.isNotEmpty() && t.lastArticleGuid != articles[0].guid) {
                     termsRepo.updateTerm(
                         Term(
                             id = t.id,
                             term = t.term,
                             locked = t.locked,
-                            lastArticleGuid = articles[0].guid
+                            lastArticleGuid = articles[0].guid,
+                            hasNewArticle = true
                         )
                     )
+                    manager.showNotification(
+                        "New results for ${t.term.replaceFirstChar { it.uppercase() }}",
+                        "Tap to see new results",
+                        t.id
+                    )
                     hasNewResults = true
-                    if (t.lastArticleGuid != articles[0].guid) {
-                        manager.showNotification(
-                            "New results for ${t.term.replaceFirstChar { it.uppercase() }}",
-                            "Tap to see new results",
-                            t.id
-                        )
-                    }
                 }
             }
-            // TODO: pull from preferences instead of being 4 hours
-            schedulePeriodicReminders(4L * 60L)
+            val refreshInterval = getWorkInterval()
+            println("Reminding again in $refreshInterval minutes")
+            schedulePeriodicReminders(refreshInterval)
             hasNewResults
         } catch (e: Exception) {
             println("Error updating GUIDs $e")
@@ -94,33 +110,22 @@ actual class WorkService : KoinComponent {
         }
     }
 
+    /**
+     * Sends a generic reminder to prompt users to open app
+     */
     private fun schedulePeriodicReminders(intervalMinutes: Long) {
-        // Schedule a reminder notification that prompts user to open app
         manager.scheduleNotification(
             id = 0,
             title = "Research Tracker",
-            message = "Tap to check for new research updates",
+            message = "Tap to check for new updates",
             interval = intervalMinutes
         )
     }
 
-    // TODO probably remove old implementation altogether
-    @OptIn(ExperimentalForeignApi::class)
-    private fun scheduleAppRefreshTask(intervalMinutes: Long) {
-        val request =
-            BGAppRefreshTaskRequest(identifier = TASK_ID)
-        request.earliestBeginDate =
-            NSDate().dateByAddingTimeInterval((intervalMinutes * 60).toDouble())
-        BGTaskScheduler.sharedScheduler.submitTaskRequest(request, null)
-    }
-
-    fun checkForUpdatesOnAppLaunch() {
-        println("Checking for updates")
-        scope.launch {
-            performWork()
-        }
-    }
-
+    /**
+     * refreshWithoutNotifications() replicates performWork() to update hasNewArticle flag without
+     * scheduling notifications. It is called when users visit HomeScreen to update
+     */
     actual suspend fun refreshWithoutNotification(): Boolean {
         return try {
             val terms = termsRepo.getAllTerms()
@@ -145,5 +150,26 @@ actual class WorkService : KoinComponent {
             println("Error updating GUIDs $e")
             false
         }
+    }
+
+    // TODO probably remove old implementation altogether
+    @OptIn(ExperimentalForeignApi::class)
+    private fun scheduleAppRefreshTask(intervalMinutes: Long) {
+        val request =
+            BGAppRefreshTaskRequest(identifier = TASK_ID)
+        request.earliestBeginDate =
+            NSDate().dateByAddingTimeInterval((intervalMinutes * 60).toDouble())
+        BGTaskScheduler.sharedScheduler.submitTaskRequest(request, null)
+    }
+
+    fun checkForUpdatesOnAppLaunch() {
+        println("Checking for updates")
+        scope.launch {
+            performWork()
+        }
+    }
+
+    private fun getWorkInterval(): Long {
+        return prefsRepo.getPrefByKey("workInterval")?.toLongOrNull() ?: 60L
     }
 }
