@@ -77,24 +77,24 @@ fun DetailsScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-        Row {
-            Button(
-                onClick = {
-                    viewModel.sort("source")
-                    coroutineScope.launch { listState.animateScrollToItem(0) }
-                }
-            ) {
-                Text("Sort by Source")
-            }
-            Button(
-                onClick = {
-                    viewModel.sort("date")
-                    coroutineScope.launch { listState.animateScrollToItem(0) }
-                }
-            ) {
-                Text("Sort by Date")
-            }
-        }
+//        Row {
+//            Button(
+//                onClick = {
+//                    viewModel.sort("source")
+//                    coroutineScope.launch { listState.animateScrollToItem(0) }
+//                }
+//            ) {
+//                Text("Sort by Source")
+//            }
+//            Button(
+//                onClick = {
+//                    viewModel.sort("date")
+//                    coroutineScope.launch { listState.animateScrollToItem(0) }
+//                }
+//            ) {
+//                Text("Sort by Date")
+//            }
+//        }
         Row(
             modifier = Modifier.fillMaxWidth(.9f)
                 .testTag("DetailsScreenTermRow"),

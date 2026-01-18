@@ -56,7 +56,7 @@ fun NavTilesScreen(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally)
         ) {
-            NavTile(title = "Terms", onClick = onHome, tileIcon = {
+            NavTile(title = "News", onClick = onHome, tileIcon = {
                 Icon(
                     imageVector = Icons.Default.Newspaper,
                     contentDescription = "Tracked Terms",
