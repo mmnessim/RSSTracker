@@ -48,4 +48,17 @@ class ApiService(private val client: HttpClient) : KoinComponent {
             null
         }
     }
+
+    suspend fun getFeedsList(): List<String> {
+        return try {
+            val endpoint = "$url/unique"
+            val response = client.get(endpoint)
+            val bodyString = response.bodyAsText()
+            println(bodyString)
+            json.decodeFromString<List<String>>(bodyString)
+        } catch (e: Exception) {
+            println("Error getting feeds list $e")
+            emptyList<String>()
+        }
+    }
 }

@@ -5,7 +5,12 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -14,7 +19,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.unit.dp
@@ -33,6 +37,7 @@ fun AboutScreen(
     val apiService = ApiService(client)
     var stats by remember { mutableStateOf<Stats?>(null) }
     val uriHandler = LocalUriHandler.current
+    val scrollState = rememberScrollState()
 
     LaunchedEffect(Unit) {
         stats = apiService.getStats()
@@ -40,55 +45,76 @@ fun AboutScreen(
 
     Column(
         modifier = modifier
+            .fillMaxSize()
             .padding(12.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+//        verticalArrangement = Arrangement.spacedBy(12.dp),
+//        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // TODO handle differences with isIos flag
-        if (isIos) {
-            AboutTile(
-                title = "App Version",
-                description = "${Constants.APP_VERSION}/iOS"
-            )
-        } else {
-            AboutTile(
-                title = "App Version",
-                description = "${Constants.APP_VERSION}/Android"
-            )
-        }
-        AboutTile(
-            title = "Developer Information",
-            description = "Developed by Mounir Nessim",
-            extraText = "Email mnessimdev@gmail.com to provide feedback"
-        )
-
-        AboutTile(
-            title = "News Sources",
-            description = "Articles are fetched from public RSS feeds every 15 minutes and stored for 30 days.",
-            extraText = stats?.let { "Current count: ${it.numArticles} articles from ${it.numSources} RSS feeds" }
-        )
-        Row(
-            modifier = Modifier
-                .clickable(
-                    onClick = {
-                        uriHandler.openUri("https://github.com/mmnessim/ResearchTrackerKotlin")
-                    }
-                )
+        LazyColumn(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(12.dp),
         ) {
-            AboutTile(
-                modifier = Modifier
-                    .background(
-                        color = MaterialTheme.colorScheme.surfaceVariant,
-                        shape = RoundedCornerShape(8.dp)
+            item {
+                if (isIos) {
+                    AboutTile(
+                        title = "App Version",
+                        description = "${Constants.APP_VERSION}/iOS"
                     )
-                    .clickable(
-                        onClick = {
-                            uriHandler.openUri("https://github.com/mmnessim/ResearchTrackerKotlin")
-                        }
-                    ),
-                title = "Source Code",
-                description = "View on Github"
-            )
+                } else {
+                    AboutTile(
+                        title = "App Version",
+                        description = "${Constants.APP_VERSION}/Android"
+                    )
+                }
+            }
+
+            item {
+                AboutTile(
+                    title = "Developer Information",
+                    description = "Developed by Mounir Nessim",
+                    extraText = "Email mnessimdev@gmail.com to provide feedback"
+                )
+            }
+
+            item {
+                AboutTile(
+                    title = "News Sources",
+                    description = "Articles are fetched from public RSS feeds every 15 minutes and stored for 30 days.",
+                    extraText = stats?.let { "Current count: ${it.numArticles} articles from ${it.numSources} RSS feeds" }
+                )
+            }
+
+            item {
+                Row(
+                    modifier = Modifier
+                        .clickable(
+                            onClick = {
+                                uriHandler.openUri("https://github.com/mmnessim/ResearchTrackerKotlin")
+                            }
+                        )
+                ) {
+                    AboutTile(
+                        modifier = Modifier
+                            .background(
+                                color = MaterialTheme.colorScheme.surfaceVariant,
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                            .clickable(
+                                onClick = {
+                                    uriHandler.openUri("https://github.com/mmnessim/ResearchTrackerKotlin")
+                                }
+                            ),
+                        title = "Source Code",
+                        description = "View on Github"
+                    )
+                }
+            }
+            item {
+                FeedsList(
+                    modifier = Modifier.fillMaxWidth()
+                        .height(600.dp)
+                )
+            }
         }
         // Maybe add a feedback form or something
     }
