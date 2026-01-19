@@ -19,7 +19,7 @@ fun AboutTile(
     modifier: Modifier = Modifier,
     title: String,
     description: String,
-    extraText: String? = null
+    extraText: String? = null,
 ) {
     SelectionContainer {
         Column(
