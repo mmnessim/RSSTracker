@@ -1,4 +1,4 @@
-# ResearchTrackerKMP
+# RSSTracker
 
 A small multiplatform app for tracking RSS articles related to user-defined search terms.
 The project includes a Kotlin Multiplatform Compose client (Android + iOS + JVM)
