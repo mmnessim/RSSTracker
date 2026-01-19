@@ -1,0 +1,9 @@
+package com.mnessim.rsstracker
+
+interface Platform {
+    val name: String
+}
+
+expect fun getPlatform(): Platform
+
+expect val isIos: Boolean

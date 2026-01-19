@@ -1,0 +1,23 @@
+package com.mnessim.rsstracker
+
+import kotlinx.serialization.Serializable
+
+interface AppRoute
+
+@Serializable
+object HomeRoute : AppRoute
+
+@Serializable
+data class DetailsRoute(val id: Long) : AppRoute
+
+@Serializable
+object NavTilesRoute : AppRoute
+
+@Serializable
+object OptionsRoute : AppRoute
+
+@Serializable
+object AboutRoute : AppRoute
+
+@Serializable
+object SavedArticlesRoute : AppRoute

@@ -1,4 +1,4 @@
-rootProject.name = "ResearchTrackerKMP"
+rootProject.name = "RSSTracker"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 pluginManagement {

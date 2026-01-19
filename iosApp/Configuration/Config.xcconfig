@@ -1,6 +1,6 @@
 TEAM_ID=
 
-PRODUCT_NAME=ResearchTrackerKMP
+PRODUCT_NAME=RSSTracker
 PRODUCT_BUNDLE_IDENTIFIER=com.mnessim.researchtrackerkmp.ResearchTrackerKMP$(TEAM_ID)
 
 CURRENT_PROJECT_VERSION=1

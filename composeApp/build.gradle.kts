@@ -83,11 +83,11 @@ kotlin {
 }
 
 android {
-    namespace = "com.mnessim.researchtrackerkmp"
+    namespace = "com.mnessim.rsstracker"
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "com.mnessim.researchtrackerkmp"
+        applicationId = "com.mnessim.rsstracker"
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 10
@@ -115,11 +115,11 @@ dependencies {
 
 compose.desktop {
     application {
-        mainClass = "com.mnessim.researchtrackerkmp.MainKt"
+        mainClass = "com.mnessim.rsstracker.MainKt"
 
         nativeDistributions {
             targetFormats(TargetFormat.Dmg, TargetFormat.Msi, TargetFormat.Deb)
-            packageName = "com.mnessim.researchtrackerkmp"
+            packageName = "com.mnessim.rsstracker"
             packageVersion = "1.0.0"
         }
     }
