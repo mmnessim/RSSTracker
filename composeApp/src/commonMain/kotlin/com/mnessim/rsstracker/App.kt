@@ -140,7 +140,7 @@ fun App(startDestination: AppRoute = NavTilesRoute) {
                                     message = "Tap to see more",
                                     id = term.id
                                 )
-                            }
+                            },
                         )
                     } // composable<Home>
                     composable<DetailsRoute> { backStackEntry ->

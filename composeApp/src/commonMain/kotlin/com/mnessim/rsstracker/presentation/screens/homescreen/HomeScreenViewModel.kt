@@ -14,44 +14,44 @@ import kotlinx.coroutines.launch
 class HomeScreenViewModel(
     private val termsRepo: ITermsRepo,
     private val workService: IWorkService,
-) : ViewModel() {
+
+    ) : ViewModel() {
     private var _terms = MutableStateFlow<List<Term>>(emptyList())
     val terms: StateFlow<List<Term>> = _terms.asStateFlow()
+
+    private var _showAlert = MutableStateFlow<Boolean>(false)
+    val showAlert: StateFlow<Boolean> = _showAlert.asStateFlow()
 
     val controller = TextFieldState()
 
     init {
         loadTerms()
         refreshTerms()
+
     }
 
     private fun loadTerms() {
-        viewModelScope.launch {
-            _terms.value = termsRepo.getAllTerms()
-        }
+        _terms.value = termsRepo.getAllTerms()
     }
 
     fun addTerm(locked: Boolean) {
         val termName = controller.text.toString()
         if (termName.isEmpty()) return
-        viewModelScope.launch {
-            termsRepo.insertTerm(termName, locked)
-            loadTerms()
-        }
+
+        termsRepo.insertTerm(termName, locked)
+        loadTerms()
+
     }
 
     fun removeTerm(id: Long) {
-        viewModelScope.launch {
-            termsRepo.deleteTerm(id)
-            loadTerms()
-        }
+        termsRepo.deleteTerm(id)
+        loadTerms()
+
     }
 
     fun toggleLocked(term: Term) {
-        viewModelScope.launch {
-            termsRepo.updateTerm(Term(id = term.id, term = term.term, locked = !term.locked))
-            loadTerms()
-        }
+        termsRepo.updateTerm(Term(id = term.id, term = term.term, locked = !term.locked))
+        loadTerms()
     }
 
     fun refreshTerms() {
@@ -59,5 +59,13 @@ class HomeScreenViewModel(
             workService.refreshWithoutNotification()
             loadTerms()
         }
+    }
+
+    fun showAlert() {
+        _showAlert.value = true
+    }
+
+    fun hideAlert() {
+        _showAlert.value = false
     }
 }

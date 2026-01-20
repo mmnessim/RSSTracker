@@ -15,12 +15,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -43,7 +42,7 @@ fun HomeScreen(
     val viewmodel = remember { HomeScreenViewModel(repo, workService) }
 
     val terms by viewmodel.terms.collectAsState()
-    var showAlertDialog by remember { mutableStateOf(false) }
+    val showAlertDialog by viewmodel.showAlert.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
@@ -60,6 +59,7 @@ fun HomeScreen(
         ) {
             if (terms.isEmpty()) {
                 Text(
+                    modifier = Modifier.testTag("InitialMessage"),
                     text = "Click the + below to add a term",
                     style = TextStyle(
                         color = MaterialTheme.colorScheme.onSurface,
@@ -91,7 +91,7 @@ fun HomeScreen(
             } // LazyColumn
 
             AddTermButton(
-                onClick = { showAlertDialog = true }
+                onClick = { viewmodel.showAlert() }
             )
 
             if (showAlertDialog) {
@@ -103,9 +103,9 @@ fun HomeScreen(
                             viewmodel.addTerm(false)
                             viewmodel.controller.clearText()
                         }
-                        showAlertDialog = false
+                        viewmodel.hideAlert()
                     },
-                    onDismiss = { showAlertDialog = false },
+                    onDismiss = { viewmodel.hideAlert() },
                     tag = "TermAlertDialog"
                 ) // AddTermAlert
             } // if (showAlertDialog)
