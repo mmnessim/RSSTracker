@@ -40,11 +40,11 @@ actual class NotificationManager actual constructor() {
         }
 
         // Use an implicit deep-link intent so this KMP module doesn't need to reference MainActivity
-        val deepLinkUri = "researchtracker://details/$id".toUri()
+        val deepLinkUri = "rsstracker://details/$id".toUri()
         val intent = Intent(Intent.ACTION_VIEW, deepLinkUri).apply {
             putExtra("navigate_to", "details")
             putExtra("details_id", id.toString())
-            action = "com.mnessim.rsstracker.ACTION_SHOW_DETAILS_$id"
+//            action = "com.mnessim.rsstracker.ACTION_SHOW_DETAILS_$id"
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
 
