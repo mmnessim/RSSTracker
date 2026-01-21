@@ -72,8 +72,6 @@ class HomeScreenTest {
         onNodeWithTag("DeleteButton").performClick()
         waitForIdle()
         onNodeWithText("Test term").assertDoesNotExist()
-
-
     }
 
     @Test
@@ -81,7 +79,6 @@ class HomeScreenTest {
         setContent {
             HomeScreen(onNavigate = {}, onNotificationButton = {}, onNavigateToTiles = {})
         }
-
         // No dialog initially
         onNodeWithTag("TermAlertDialog").assertDoesNotExist()
         // Press button, dialog exists
@@ -105,8 +102,6 @@ class HomeScreenTest {
         onNodeWithTag("DeleteButton").assertExists().performClick()
         onNodeWithTag("AddTermButton").assertExists().performClick()
         onNodeWithTag("TermAlertDialog").assertExists()
-
-
     }
 }
 
@@ -146,7 +141,7 @@ class FakeWorkService() : IWorkService, KoinComponent {
 
 class FakeTermsRepo : ITermsRepo {
     private val terms = mutableListOf<Term>(
-//        Term(id = 1L, term = "Test Term", locked = false)
+        Term(id = 1L, term = "Test Term", locked = false)
     )
 
     override fun getAllTerms(): List<Term> = terms.toList()
