@@ -13,6 +13,7 @@ import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -27,6 +28,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mnessim.rsstracker.Constants
 import com.mnessim.rsstracker.domain.services.ApiService
@@ -86,68 +88,81 @@ fun AppBar(
         }
     }
 
-    TopAppBar(
-        colors = TopAppBarColors(
-            containerColor = colorScheme.surfaceContainer,
-            scrolledContainerColor = colorScheme.surfaceContainer,
-            navigationIconContentColor = colorScheme.onSurface,
-            titleContentColor = colorScheme.onSurface,
-            actionIconContentColor = colorScheme.onSurface
-        ), // colors =
-        title = { Text(Constants.APP_TITLE) },
-        navigationIcon = if (canPop) {
-            {
-                IconButton(onClick = onNavigate) {
-                    Icon(
-                        imageVector = Icons.AutoMirrored.Default.ArrowBack,
-                        contentDescription = "Back"
+    Surface(
+        shadowElevation = 4.dp,
+        color = MaterialTheme.colorScheme.secondaryContainer
+    ) {
+        TopAppBar(
+            colors = TopAppBarColors(
+                containerColor = colorScheme.surfaceContainer,
+                scrolledContainerColor = colorScheme.surfaceContainer,
+                navigationIconContentColor = colorScheme.onSurface,
+                titleContentColor = colorScheme.onSurface,
+                actionIconContentColor = colorScheme.onSurface
+            ), // colors =
+            title = {
+                Text(
+                    text = Constants.APP_TITLE,
+                    style = MaterialTheme.typography.headlineMedium.copy(
+//                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                        fontWeight = FontWeight.Bold
                     )
-                }
-            }
-        } else {
-            {}
-        }, // navigationIcon =
-        actions = {
-            Surface(
-                color = if (status == HttpStatusCode.OK) Color.Green else Color.Red,
-                shape = CircleShape,
-                onClick = {
-                    status = HttpStatusCode.Processing
-                    scope.launch {
-                        status = apiService.checkHealth()
+                )
+            },
+            navigationIcon = if (canPop) {
+                {
+                    IconButton(onClick = onNavigate) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Default.ArrowBack,
+                            contentDescription = "Back"
+                        )
                     }
                 }
-            ) {
-                Box(
+            } else {
+                {}
+            }, // navigationIcon =
+            actions = {
+                Surface(
+                    color = if (status == HttpStatusCode.OK) Color.Green else Color.Red,
+                    shape = CircleShape,
+                    onClick = {
+                        status = HttpStatusCode.Processing
+                        scope.launch {
+                            status = apiService.checkHealth()
+                        }
+                    }
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .padding(horizontal = 12.dp)
+                            .size(10.dp)
+                    )
+                }
+                IconButton(onClick = onNotificationButton) {
+                    Icon(
+                        imageVector = Icons.Default.Notifications,
+                        contentDescription = "Test Notifications"
+                    ) // Icon
+                } // IconButton
+                Surface(
                     modifier = Modifier
-                        .padding(horizontal = 12.dp)
-                        .size(10.dp)
-                )
+                        .padding(horizontal = 18.dp)
+                        .pointerInput(Unit) {
+                            detectTapGestures(
+                                onTap = {
+                                    onChangeColorScheme()
+                                },
+                            )
+                        },
+                    shape = CircleShape
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.InvertColors,
+                        contentDescription = "Toggle Dark Mode"
+                    ) // Icon
+                } // Surface
             }
-            IconButton(onClick = onNotificationButton) {
-                Icon(
-                    imageVector = Icons.Default.Notifications,
-                    contentDescription = "Test Notifications"
-                ) // Icon
-            } // IconButton
-            Surface(
-                modifier = Modifier
-                    .padding(horizontal = 18.dp)
-                    .pointerInput(Unit) {
-                        detectTapGestures(
-                            onTap = {
-                                onChangeColorScheme()
-                            },
-                        )
-                    },
-                shape = CircleShape
-            ) {
-                Icon(
-                    imageVector = Icons.Default.InvertColors,
-                    contentDescription = "Toggle Dark Mode"
-                ) // Icon
-            } // Surface
-        }
-    )
+        )
+    }
 }
 

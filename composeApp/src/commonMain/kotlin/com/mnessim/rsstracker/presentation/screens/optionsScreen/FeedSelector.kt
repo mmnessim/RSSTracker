@@ -40,6 +40,7 @@ fun FeedSelector(
     var showAlertDialog by remember { mutableStateOf(false) }
 
     Surface(
+        shadowElevation = 4.dp,
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 12.dp)
@@ -103,6 +104,7 @@ fun FeedSelector(
                     val blocked = blockedFeeds.contains(it)
 
                     Surface(
+                        shadowElevation = 4.dp,
                         modifier = Modifier.fillMaxWidth()
                             .clickable(
                                 onClick = { toggleBlock(it) }

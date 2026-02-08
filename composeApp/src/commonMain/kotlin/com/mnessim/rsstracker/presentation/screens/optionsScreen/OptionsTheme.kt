@@ -55,6 +55,7 @@ fun OptionsTheme(
     }
 
     Surface(
+        shadowElevation = 4.dp,
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 12.dp)

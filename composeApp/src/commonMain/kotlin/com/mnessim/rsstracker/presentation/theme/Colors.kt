@@ -34,7 +34,9 @@ val surfaceDimLight = Color(0xFFE1D7DF)
 val surfaceBrightLight = Color(0xFFFFF7FB)
 val surfaceContainerLowestLight = Color(0xFFFFFFFF)
 val surfaceContainerLowLight = Color(0xFFFBF1F8)
-val surfaceContainerLight = Color(0xFFF5EBF3)
+
+// Manually changed -> not so white
+val surfaceContainerLight = Color(0xFFE3D5E3)
 val surfaceContainerHighLight = Color(0xFFEFE5ED)
 val surfaceContainerHighestLight = Color(0xFFE9E0E7)
 

@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -131,9 +132,10 @@ fun App(startDestination: AppRoute = NavTilesRoute) {
                     composable<HomeRoute> {
                         HomeScreen(
                             modifier = Modifier
+                                .background(MaterialTheme.colorScheme.surfaceContainer)
                                 .padding(innerPadding)
-                                .fillMaxSize()
-                                .background(MaterialTheme.colorScheme.surfaceContainer),
+                                .padding(top = 8.dp)
+                                .fillMaxSize(),
                             onNavigate = { id -> navController.navigate(DetailsRoute(id)) },
                             onNavigateToTiles = { navController.navigate(NavTilesRoute) },
                             onNotificationButton = { term ->
@@ -150,6 +152,7 @@ fun App(startDestination: AppRoute = NavTilesRoute) {
                         DetailsScreen(
                             modifier = Modifier
                                 .padding(innerPadding)
+                                .padding(top = 8.dp)
                                 .fillMaxSize()
                                 .background(MaterialTheme.colorScheme.surfaceContainer),
                             onBack = {
@@ -165,6 +168,7 @@ fun App(startDestination: AppRoute = NavTilesRoute) {
                         NavTilesScreen(
                             modifier = Modifier
                                 .padding(innerPadding)
+                                .padding(top = 8.dp)
                                 .fillMaxSize()
                                 .background(MaterialTheme.colorScheme.surfaceContainer),
                             onHome = { navController.navigate(HomeRoute) },
@@ -177,6 +181,7 @@ fun App(startDestination: AppRoute = NavTilesRoute) {
                         OptionsScreen(
                             modifier = Modifier
                                 .padding(innerPadding)
+                                .padding(top = 8.dp)
                                 .fillMaxSize()
                                 .background(MaterialTheme.colorScheme.surfaceContainer)
                         )
@@ -185,6 +190,7 @@ fun App(startDestination: AppRoute = NavTilesRoute) {
                         AboutScreen(
                             modifier = Modifier
                                 .padding(innerPadding)
+                                .padding(top = 8.dp)
                                 .fillMaxSize()
                                 .background(MaterialTheme.colorScheme.surfaceContainer)
                         )

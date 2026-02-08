@@ -2,8 +2,14 @@
 
 ## Upcoming Release - Version 1.0.13
 
+###
+
+- Big UI changes. Removed borders and implemented shadowElevations
+- Slightly changed general background color
+
 ### Bug fixes
 
+- Fix bug where duplicate GUID values crash app
 - Fixed iOS app crashing when launching from lock screen notification
 
 ## Previous Release - Version 1.0.12

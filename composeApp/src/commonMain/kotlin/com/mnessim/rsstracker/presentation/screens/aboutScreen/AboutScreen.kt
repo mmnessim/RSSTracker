@@ -65,7 +65,8 @@ fun AboutScreen(
                     extraText = "No accounts, no data sharing, just pure privacy. Instantly search " +
                             "and follow terms, with your preferences stored only on your device. " +
                             "Stay informed with fresh articles from trusted RSS feeds, all in one " +
-                            "simple, secure app."
+                            "simple, secure app.",
+                    shadowColor = MaterialTheme.colorScheme.secondaryContainer,
                 )
             }
             item {
@@ -90,7 +91,8 @@ fun AboutScreen(
                     ),
                     title = "Developer Information",
                     description = "Developed by Mounir Nessim",
-                    extraText = "Email mnessimdev@gmail.com to provide feedback"
+                    extraText = "Email mnessimdev@gmail.com to provide feedback",
+                    shadowColor = MaterialTheme.colorScheme.secondaryContainer
                 )
             }
 
@@ -117,13 +119,9 @@ fun AboutScreen(
                                 color = MaterialTheme.colorScheme.secondaryContainer,
                                 shape = RoundedCornerShape(8.dp)
                             ),
-//                            .clickable(
-//                                onClick = {
-//                                    uriHandler.openUri("https://github.com/mmnessim/ResearchTrackerKotlin")
-//                                }
-//                            ),
                         title = "Source Code",
-                        description = "View on Github"
+                        description = "View on Github",
+                        shadowColor = MaterialTheme.colorScheme.secondaryContainer
                     )
                 }
             }

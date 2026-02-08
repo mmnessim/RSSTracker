@@ -127,7 +127,8 @@ fun DetailsScreen(
             ) {
                 itemsIndexed(
                     articles.take(showAmount),
-                    key = { index, a -> a.guid ?: "${a.link}-$index" }) { i, a ->
+                    key = { index, a -> "${a.guid ?: a.link}-$index" }
+                ) { i, a ->
                     val isBlocked = blocked.contains(a.rssSource)
 
                     if (!isBlocked) {

@@ -72,6 +72,7 @@ fun OptionsWorkInterval(
     val currentMinutes = options[intervalIndex.roundToInt()]
 
     Surface(
+        shadowElevation = 4.dp,
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 12.dp),
