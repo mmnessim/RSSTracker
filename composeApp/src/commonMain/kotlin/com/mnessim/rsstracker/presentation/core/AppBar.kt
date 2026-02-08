@@ -1,5 +1,6 @@
 package com.mnessim.rsstracker.presentation.core
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
@@ -47,7 +48,8 @@ fun AppBar(
     canPop: Boolean,
     onNavigate: () -> Unit,
     onChangeColorScheme: () -> Unit,
-    onNotificationButton: () -> Unit
+    onNotificationButton: () -> Unit,
+    onTitleTap: () -> Unit
 ) {
     val client = koinInject<HttpClient>()
     val apiService = ApiService(client)
@@ -101,13 +103,18 @@ fun AppBar(
                 actionIconContentColor = colorScheme.onSurface
             ), // colors =
             title = {
-                Text(
-                    text = Constants.APP_TITLE,
-                    style = MaterialTheme.typography.headlineMedium.copy(
-//                        color = MaterialTheme.colorScheme.onPrimaryContainer,
-                        fontWeight = FontWeight.Bold
+                Box(
+                    modifier = Modifier.clickable(
+                        onClick = onTitleTap
                     )
-                )
+                ) {
+                    Text(
+                        text = Constants.APP_TITLE,
+                        style = MaterialTheme.typography.headlineMedium.copy(
+                            fontWeight = FontWeight.Bold
+                        )
+                    )
+                }
             },
             navigationIcon = if (canPop) {
                 {

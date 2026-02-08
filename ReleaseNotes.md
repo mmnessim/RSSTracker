@@ -2,7 +2,7 @@
 
 ## Upcoming Release - Version 1.0.13
 
-###
+### Features
 
 - Big UI changes. Removed borders and implemented shadowElevations
 - Slightly changed general background color

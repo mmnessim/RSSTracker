@@ -12,8 +12,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -24,11 +24,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 
 @Composable
 fun FeedSelector(
@@ -45,10 +42,10 @@ fun FeedSelector(
             .fillMaxWidth()
             .padding(horizontal = 12.dp)
             .background(
-                color = MaterialTheme.colorScheme.primary,
+                color = MaterialTheme.colorScheme.primaryContainer,
                 shape = RoundedCornerShape(8.dp)
             ),
-        color = MaterialTheme.colorScheme.primary,
+        color = MaterialTheme.colorScheme.primaryContainer,
         shape = RoundedCornerShape(8.dp)
     ) {
         Column(
@@ -58,9 +55,8 @@ fun FeedSelector(
             Text(
                 modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
                 text = "Block results from specific sources",
-                style = TextStyle(
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    fontSize = 16.sp,
+                style = MaterialTheme.typography.bodyLarge.copy(
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
                     fontWeight = FontWeight.Bold
                 )
             )
@@ -68,28 +64,27 @@ fun FeedSelector(
                 Text(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
                     text = if (blockedFeeds.size == 2) "${blockedFeeds.size - 1} feed blocked" else "${blockedFeeds.size - 1} feeds blocked",
-                    style = TextStyle(
-                        color = MaterialTheme.colorScheme.onPrimary,
-                        fontSize = 16.sp,
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
                     )
                 )
             }
-            Button(
+            ElevatedButton(
                 onClick = {
                     showAlertDialog = true
                 },
                 content = {
                     Text(
                         text = "Unblock all",
-                        style = TextStyle(
-                            color = MaterialTheme.colorScheme.onSecondaryContainer,
-                            fontSize = 16.sp,
+                        style = MaterialTheme.typography.bodyLarge.copy(
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            fontWeight = FontWeight.Bold
                         )
                     )
                 },
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    contentColor = MaterialTheme.colorScheme.onPrimary
                 )
             )
             Spacer(modifier = Modifier.height(8.dp))
@@ -104,17 +99,23 @@ fun FeedSelector(
                     val blocked = blockedFeeds.contains(it)
 
                     Surface(
-                        shadowElevation = 4.dp,
+                        shadowElevation = 8.dp,
                         modifier = Modifier.fillMaxWidth()
                             .clickable(
                                 onClick = { toggleBlock(it) }
                             ),
-                        color = if (blocked) Color.Red else MaterialTheme.colorScheme.background,
+                        color = if (blocked)
+                            MaterialTheme.colorScheme.errorContainer else MaterialTheme.colorScheme.secondaryContainer,
                         shape = RoundedCornerShape(8.dp)
                     ) {
                         Text(
-                            "$it ${if (blocked) "BLOCKED" else ""}",
-                            modifier = Modifier.padding(8.dp)
+                            text = "$it ${if (blocked) "BLOCKED" else ""}",
+                            modifier = Modifier.padding(8.dp),
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                color = if (blocked)
+                                    MaterialTheme.colorScheme.onErrorContainer else MaterialTheme.colorScheme.onSecondaryContainer,
+                                fontWeight = if (blocked) FontWeight.Bold else FontWeight.Medium
+                            )
                         )
                     }
                 }

@@ -95,7 +95,10 @@ fun App(startDestination: AppRoute = NavTilesRoute) {
                 canPop = canPop,
                 onNavigate = { navController.popBackStack() },
                 onChangeColorScheme = { showColorSchemeDialog = true },
-                onNotificationButton = { manager.showNotification("Test", "test", 1) }
+                onNotificationButton = { manager.showNotification("Test", "test", 1) },
+                onTitleTap = {
+                    navController.navigate(NavTilesRoute)
+                }
             ) // AppBar
         } // topBar =
     ) { innerPadding ->

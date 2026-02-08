@@ -23,7 +23,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
@@ -60,10 +59,10 @@ fun OptionsTheme(
             .fillMaxWidth()
             .padding(horizontal = 12.dp)
             .background(
-                color = MaterialTheme.colorScheme.primary,
+                color = MaterialTheme.colorScheme.primaryContainer,
                 shape = RoundedCornerShape(8.dp)
             ),
-        color = MaterialTheme.colorScheme.primary,
+        color = MaterialTheme.colorScheme.primaryContainer,
         shape = RoundedCornerShape(8.dp)
     ) {
         Row(
@@ -78,13 +77,16 @@ fun OptionsTheme(
                     }
                     append("Current: $colorSchemeText")
                 },
-                style = TextStyle(color = MaterialTheme.colorScheme.onPrimary)
+                style =
+                    MaterialTheme.typography.bodyLarge.copy(
+                        color = MaterialTheme.colorScheme.onPrimaryContainer,
+                    )
             )
             IconButton(onClick = { showDialog = true }) {
                 Icon(
                     imageVector = Icons.Default.Settings,
                     contentDescription = "Change color scheme",
-                    tint = MaterialTheme.colorScheme.onPrimary
+                    tint = MaterialTheme.colorScheme.onPrimaryContainer
                 )
             }
         }
