@@ -31,6 +31,9 @@ class DetailsScreenViewModel(
     private var _blocked = MutableStateFlow<List<String>>(emptyList())
     val blocked: StateFlow<List<String>> = _blocked.asStateFlow()
 
+    private var _numBlocked = MutableStateFlow<Int>(0)
+    var numBlocked: StateFlow<Int> = _numBlocked.asStateFlow()
+
     var term: Term = termsRepo.getTermById(id) ?: Term(-1, "Error Loading Term", false)
 
     init {
@@ -71,6 +74,17 @@ class DetailsScreenViewModel(
 
     fun loadBlocked() {
         _blocked.value = prefsRepo.getPrefByKey("blockedFeeds")?.split(",") ?: emptyList<String>()
+    }
+
+    fun getNumBlocked() {
+        _numBlocked.value = 0
+        var count = 0
+        for (a in response.value) {
+            if (blocked.value.contains(a.rssSource)) {
+                count += 1
+            }
+        }
+        _numBlocked.value = count
     }
 
     private fun updateGuid() {

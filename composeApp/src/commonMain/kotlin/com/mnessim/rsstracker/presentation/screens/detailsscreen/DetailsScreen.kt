@@ -58,6 +58,7 @@ fun DetailsScreen(
     val articles by viewModel.response.collectAsState()
     val loading by viewModel.loading.collectAsState()
     val blocked by viewModel.blocked.collectAsState()
+    val numBlocked by viewModel.numBlocked.collectAsState()
     val term = viewModel.term
 
     if (term.id == -1L) {
@@ -73,9 +74,14 @@ fun DetailsScreen(
         viewModel.fetch()
     }
 
+    LaunchedEffect(articles) {
+        viewModel.getNumBlocked()
+    }
+
     Column(
         modifier = modifier
             .fillMaxSize()
+
             .testTag("DetailsScreenOuterColumn"),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
@@ -114,6 +120,14 @@ fun DetailsScreen(
             )
         }
 
+        Text(
+            text = "$numBlocked blocked articles",
+            style = MaterialTheme.typography.headlineSmall.copy(
+                color = MaterialTheme.colorScheme.primary
+            )
+        )
+        // TODO: Add button to show anyways
+
         if (!loading) {
             LazyColumn(
                 state = listState,
@@ -137,12 +151,6 @@ fun DetailsScreen(
                             article = a,
                         )
                     }
-                    // TODO: Maybe add functionality to override blocked terms?
-//                    } else {
-//                        Surface {
-//                            Text("Blocked result from ${a.rssSource}. Show anyways?")
-//                        }
-//                    }
                 }
             }
         } else {
