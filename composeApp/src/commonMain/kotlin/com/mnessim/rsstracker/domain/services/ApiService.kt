@@ -61,4 +61,16 @@ class ApiService(private val client: HttpClient) : KoinComponent {
             emptyList<String>()
         }
     }
+
+    suspend fun registerUUID(uuid: String): Boolean {
+        return try {
+            val endpoint = "$url/register/$uuid"
+            val response = client.get(endpoint)
+            val responseCode = response.status
+            responseCode == HttpStatusCode.OK
+        } catch (e: Exception) {
+            println("Error registering UUID: $e")
+            false
+        }
+    }
 }

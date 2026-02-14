@@ -25,7 +25,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.mnessim.rsstracker.domain.repositories.PreferencesRepo
 import com.mnessim.rsstracker.domain.services.ColorSchemeService
+import com.mnessim.rsstracker.domain.services.DeviceIDService
 import com.mnessim.rsstracker.presentation.core.AppBar
 import com.mnessim.rsstracker.presentation.core.AppStartScheduler
 import com.mnessim.rsstracker.presentation.core.ColorSchemeDialog
@@ -59,6 +61,10 @@ fun App(startDestination: AppRoute = NavTilesRoute) {
 
     val manager = koinInject<NotificationManager>()
 
+    val prefsRepo = koinInject<PreferencesRepo>()
+    val deviceIDService = koinInject<DeviceIDService>()
+    val isFirstLaunch = prefsRepo.getPrefByKey("UUID") == null
+
     LaunchedEffect(Unit) {
         NavigationEvents.navigateToDetails.collectLatest { id ->
             println("Collected navigateToDetails event: $id")
@@ -87,6 +93,17 @@ fun App(startDestination: AppRoute = NavTilesRoute) {
             }
         }
     } // LaunchedEffect
+
+    LaunchedEffect(Unit) {
+        if (isFirstLaunch) {
+            val deviceId = deviceIDService.getDeviceId()
+            println("Device ID: $deviceId")
+            prefsRepo.insertPref("UUID", deviceId)
+        } else {
+            val deviceId = prefsRepo.getPrefByKey("UUID")
+            println("Device ID: $deviceId")
+        }
+    }
 
     Scaffold(
         topBar = {

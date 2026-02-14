@@ -7,6 +7,7 @@ import com.mnessim.rsstracker.domain.repositories.PreferencesRepo
 import com.mnessim.rsstracker.domain.repositories.SavedArticlesRepo
 import com.mnessim.rsstracker.domain.repositories.TermsRepo
 import com.mnessim.rsstracker.domain.services.ColorSchemeService
+import com.mnessim.rsstracker.domain.services.DeviceIDService
 import com.mnessim.rsstracker.domain.services.HttpClientProvider
 import com.mnessim.rsstracker.utils.notifications.NotificationManager
 import org.koin.core.module.Module
@@ -56,6 +57,12 @@ val savedArticlesModule = module {
     }
 }
 
+val deviceIdModule = module {
+    single<DeviceIDService> {
+        DeviceIDService()
+    }
+}
+
 
 val commonModules: List<Module> = listOf(
     databaseModule,
@@ -64,12 +71,6 @@ val commonModules: List<Module> = listOf(
     notificationsModule,
     clientModule,
     colorModule,
-    savedArticlesModule
+    savedArticlesModule,
+    deviceIdModule
 )
-
-//fun initKoin(vararg platformModules: Module) {
-//    val modulesList = listOf<Module>(databaseModule) + platformModules
-//    startKoin {
-//        modules(modulesList)
-//    }
-//}
