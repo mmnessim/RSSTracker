@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -60,6 +61,7 @@ fun DetailsScreen(
     val blocked by viewModel.blocked.collectAsState()
     val numBlocked by viewModel.numBlocked.collectAsState()
     val term = viewModel.term
+    var overrideBlock by remember { mutableStateOf(false) }
 
     if (term.id == -1L) {
         onError()
@@ -86,24 +88,6 @@ fun DetailsScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween
     ) {
-//        Row {
-//            Button(
-//                onClick = {
-//                    viewModel.sort("source")
-//                    coroutineScope.launch { listState.animateScrollToItem(0) }
-//                }
-//            ) {
-//                Text("Sort by Source")
-//            }
-//            Button(
-//                onClick = {
-//                    viewModel.sort("date")
-//                    coroutineScope.launch { listState.animateScrollToItem(0) }
-//                }
-//            ) {
-//                Text("Sort by Date")
-//            }
-//        }
         Row(
             modifier = Modifier.fillMaxWidth(.9f)
                 .testTag("DetailsScreenTermRow"),
@@ -120,12 +104,32 @@ fun DetailsScreen(
             )
         }
 
-        Text(
-            text = "$numBlocked blocked articles",
-            style = MaterialTheme.typography.headlineSmall.copy(
-                color = MaterialTheme.colorScheme.primary
+        Row(
+            modifier = Modifier
+                .fillMaxWidth(0.9f)
+                .padding(vertical = 8.dp, horizontal = 16.dp)
+                .height(40.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = if (overrideBlock) "Showing $numBlocked blocked articles" else "$numBlocked blocked articles",
+                style = MaterialTheme.typography.headlineSmall.copy(
+                    color = MaterialTheme.colorScheme.primary
+                )
             )
-        )
+            Button(
+                onClick = { overrideBlock = !overrideBlock },
+                content = {
+                    Text(
+                        text = if (overrideBlock) "Hide" else "Show",
+                        style = MaterialTheme.typography.labelMedium.copy(
+                            color = MaterialTheme.colorScheme.onPrimary
+                        )
+                    )
+                }
+            )
+        }
         // TODO: Add button to show anyways
 
         if (!loading) {
@@ -145,7 +149,7 @@ fun DetailsScreen(
                 ) { i, a ->
                     val isBlocked = blocked.contains(a.rssSource)
 
-                    if (!isBlocked) {
+                    if (!isBlocked || overrideBlock) {
                         ArticleTile(
                             modifier = Modifier.testTag("ArticleTile"),
                             article = a,
