@@ -241,17 +241,17 @@ fun TermRowB(
                         )
                     }
 
-                    // Notifications
-                    IconButton(
-                        modifier = Modifier.testTag("TermNotificationsButton"),
-                        onClick = onNotificationButton
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Notifications,
-                            contentDescription = "Notifications",
-                            tint = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                    }
+//                    // Notifications
+//                    IconButton(
+//                        modifier = Modifier.testTag("TermNotificationsButton"),
+//                        onClick = onNotificationButton
+//                    ) {
+//                        Icon(
+//                            imageVector = Icons.Default.Notifications,
+//                            contentDescription = "Notifications",
+//                            tint = MaterialTheme.colorScheme.onSurfaceVariant
+//                        )
+//                    }
 
                     // Delete
                     IconButton(

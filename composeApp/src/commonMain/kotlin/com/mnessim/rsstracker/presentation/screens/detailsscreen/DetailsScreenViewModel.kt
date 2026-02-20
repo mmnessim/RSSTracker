@@ -58,6 +58,7 @@ class DetailsScreenViewModel(
             _response.value = apiService.search(term.term)
             _loading.value = false
             updateGuid()
+            sort("date")
         }
     }
 

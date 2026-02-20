@@ -1,6 +1,16 @@
 # Release Notes
 
-## Upcoming Release - Version 1.0.13
+## Upcoming Release - Version 1.0.15
+
+### UI
+
+- Removed notification buttons from terms rows
+
+## Previous Release - Version 1.0.14
+
+- Minor UI tweaks only
+
+## Previous Release - Version 1.0.13
 
 ### Features
 
