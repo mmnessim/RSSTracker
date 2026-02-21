@@ -33,7 +33,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.mnessim.rsstracker.Constants.BASE_FONT_SIZE
+import com.mnessim.rsstracker.domain.repositories.PreferencesRepo
 import org.jetbrains.compose.ui.tooling.preview.Preview
+import org.koin.compose.koinInject
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -45,6 +48,10 @@ fun NavTilesScreen(
     onSavedArticles: () -> Unit
 ) {
     val showAlert = remember { mutableStateOf(false) }
+    val prefsRepo = koinInject<PreferencesRepo>()
+
+    val fontOffset = prefsRepo.getPrefByKey("fontOffset")?.toInt() ?: 0
+    val fontSize = BASE_FONT_SIZE + fontOffset
 
     Column(
         modifier = modifier
@@ -65,7 +72,9 @@ fun NavTilesScreen(
                         tint = MaterialTheme.colorScheme.onPrimaryContainer,
                         modifier = Modifier.size(48.dp)
                     )
-                })
+                },
+                fontSize = fontSize
+            )
             NavTile(
                 title = "Saved Articles", onClick = onSavedArticles, tileIcon = {
                     Icon(
@@ -74,7 +83,9 @@ fun NavTilesScreen(
                         tint = MaterialTheme.colorScheme.onPrimaryContainer,
                         modifier = Modifier.size(48.dp)
                     )
-                })
+                },
+                fontSize = fontSize
+            )
         }
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -88,7 +99,9 @@ fun NavTilesScreen(
                         tint = MaterialTheme.colorScheme.onPrimaryContainer,
                         modifier = Modifier.size(48.dp)
                     )
-                })
+                },
+                fontSize = fontSize
+            )
             NavTile(
                 title = "About",
                 onClick = onAbout, tileIcon = {
@@ -98,7 +111,9 @@ fun NavTilesScreen(
                         tint = MaterialTheme.colorScheme.onPrimaryContainer,
                         modifier = Modifier.size(48.dp)
                     )
-                })
+                },
+                fontSize = fontSize
+            )
         }
     }
 
@@ -133,7 +148,8 @@ fun NavTile(
         )
     },
     modifier: Modifier = Modifier,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    fontSize: Int
 ) {
     Surface(
         shadowElevation = 4.dp,
@@ -158,8 +174,10 @@ fun NavTile(
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = title,
-                    fontSize = 16.sp,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                    style = MaterialTheme.typography.headlineLarge.copy(
+                        fontSize = (fontSize + 4).sp,
+                        color = MaterialTheme.colorScheme.onPrimaryContainer
+                    ),
                 )
             }
         }

@@ -67,7 +67,7 @@ class DetailsScreenViewModel(
         when (by) {
             "source" -> _response.value = _response.value.sortedBy { article -> article.rssSource }
             "date" -> _response.value =
-                _response.value.sortedByDescending { article -> parsePubDate(article.pubDate) }
+                _response.value.sortedByDescending { article -> article.pubDateMs }
 
             else -> return
         }
