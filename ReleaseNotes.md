@@ -5,6 +5,7 @@
 ### UI
 
 - Removed notification buttons from terms rows
+- Sort saved articles by newest first with toggle for oldest first
 
 ## Previous Release - Version 1.0.14
 

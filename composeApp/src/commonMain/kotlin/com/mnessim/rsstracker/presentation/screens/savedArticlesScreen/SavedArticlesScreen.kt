@@ -6,10 +6,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
@@ -22,7 +27,10 @@ import org.koin.compose.koinInject
 @Composable
 fun SavedArticlesScreen(modifier: Modifier = Modifier) {
     val savedArticlesRepo = koinInject<SavedArticlesRepo>()
-    val articles = savedArticlesRepo.getAllArticlesFlow().collectAsState(initial = emptyList())
+    val viewModel = remember { SavedArticlesViewModel(savedArticlesRepo = savedArticlesRepo) }
+    val articles = viewModel.articles.collectAsState()
+
+    var newestFirst by remember { mutableStateOf(true) }
 
     if (articles.value.isEmpty()) {
         Row(
@@ -43,6 +51,19 @@ fun SavedArticlesScreen(modifier: Modifier = Modifier) {
                 .padding(12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+            item {
+                Button(
+                    content = {
+                        Text(
+                            text = if (newestFirst) "New First" else "Old First"
+                        )
+                    },
+                    onClick = {
+                        if (newestFirst) viewModel.sort("old") else viewModel.sort("new")
+                        newestFirst = !newestFirst
+                    }
+                )
+            }
             items(articles.value, key = { it.guid ?: it.title }) { article: Article ->
                 ArticleTile(
                     article = article,
@@ -50,6 +71,4 @@ fun SavedArticlesScreen(modifier: Modifier = Modifier) {
             }
         }
     }
-
-
 }
