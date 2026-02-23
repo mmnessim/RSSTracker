@@ -1,11 +1,16 @@
 # Release Notes
 
-## Upcoming Release - Version 1.0.15
+## Previous Release - Version 1.0.15
 
 ### UI
 
 - Removed notification buttons from terms rows
 - Sort saved articles by newest first with toggle for oldest first
+
+### Bug fixes
+
+- Improved sorting by date for better accuracy (sorting by epoch milliseconds, should be more
+  reliable)
 
 ## Previous Release - Version 1.0.14
 

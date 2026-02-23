@@ -47,8 +47,6 @@ fun AboutScreen(
         modifier = modifier
             .fillMaxSize()
             .padding(12.dp),
-//        verticalArrangement = Arrangement.spacedBy(12.dp),
-//        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         LazyColumn(
             modifier = Modifier.weight(1f),
@@ -72,11 +70,19 @@ fun AboutScreen(
             item {
                 if (isIos) {
                     AboutTile(
+                        modifier = Modifier.background(
+                            color = MaterialTheme.colorScheme.secondaryContainer,
+                            shape = RoundedCornerShape(8.dp)
+                        ),
                         title = "App Version",
                         description = "${Constants.APP_VERSION}/iOS"
                     )
                 } else {
                     AboutTile(
+                        modifier = Modifier.background(
+                            color = MaterialTheme.colorScheme.secondaryContainer,
+                            shape = RoundedCornerShape(8.dp)
+                        ),
                         title = "App Version",
                         description = "${Constants.APP_VERSION}/Android"
                     )
@@ -98,6 +104,10 @@ fun AboutScreen(
 
             item {
                 AboutTile(
+                    modifier = Modifier.background(
+                        color = MaterialTheme.colorScheme.secondaryContainer,
+                        shape = RoundedCornerShape(8.dp)
+                    ),
                     title = "News Sources",
                     description = "Articles are fetched from public RSS feeds every 15 minutes and stored for 30 days.",
                     extraText = stats?.let { "Current count: ${it.numArticles} articles from ${it.numSources} RSS feeds" }
@@ -127,7 +137,11 @@ fun AboutScreen(
             }
             item {
                 FeedsList(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .background(
+                            color = MaterialTheme.colorScheme.secondaryContainer,
+                            shape = RoundedCornerShape(8.dp)
+                        ).fillMaxWidth()
                         .height(600.dp)
                 )
             }

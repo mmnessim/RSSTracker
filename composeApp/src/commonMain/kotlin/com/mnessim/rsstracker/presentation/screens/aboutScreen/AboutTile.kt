@@ -35,31 +35,26 @@ fun AboutTile(
             Column(
                 modifier = modifier
                     .fillMaxWidth()
-//                    .border(
-//                        width = 2.dp,
-//                        color = MaterialTheme.colorScheme.primary,
-//                        shape = RoundedCornerShape(12.dp)
-//                    )
                     .padding(16.dp)
             ) {
                 Text(
                     text = title,
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSecondaryContainer
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(
                     text = description,
                     fontSize = 16.sp,
-                    color = MaterialTheme.colorScheme.onSurface
+                    color = MaterialTheme.colorScheme.onSecondaryContainer
                 )
                 if (extraText != null) {
                     Spacer(modifier = Modifier.height(12.dp))
                     Text(
                         text = extraText,
                         fontSize = 14.sp,
-                        color = MaterialTheme.colorScheme.secondary
+                        color = MaterialTheme.colorScheme.onSecondaryContainer
                     )
                 }
             }
