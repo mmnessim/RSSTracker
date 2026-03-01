@@ -64,9 +64,10 @@ fun SavedArticlesScreen(modifier: Modifier = Modifier) {
                     }
                 )
             }
-            items(articles.value, key = { it.guid ?: it.title }) { article: Article ->
+            items(articles.value, key = { it.guid ?: it.hashCode() }) { article: Article ->
                 ArticleTile(
                     article = article,
+                    onRemoved = { viewModel.removeArticle(article) }
                 )
             }
         }

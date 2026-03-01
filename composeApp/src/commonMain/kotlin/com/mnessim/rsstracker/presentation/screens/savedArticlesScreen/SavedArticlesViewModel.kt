@@ -28,4 +28,8 @@ class SavedArticlesViewModel(
             else -> return
         }
     }
+
+    fun removeArticle(article: Article) {
+        _articles.value = _articles.value.filter { it.guid != article.guid }
+    }
 }

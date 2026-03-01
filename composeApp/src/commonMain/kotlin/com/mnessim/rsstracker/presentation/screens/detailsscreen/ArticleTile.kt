@@ -49,7 +49,11 @@ import kotlin.time.Instant
 
 @OptIn(ExperimentalTime::class)
 @Composable
-fun ArticleTile(modifier: Modifier = Modifier, article: Article) {
+fun ArticleTile(
+    modifier: Modifier = Modifier,
+    article: Article,
+    onRemoved: () -> Unit = {},
+) {
     val savedArticlesRepo = koinInject<SavedArticlesRepo>()
     var isSaved by remember { mutableStateOf(false) }
     var showAlert by remember { mutableStateOf(false) }
@@ -165,6 +169,7 @@ fun ArticleTile(modifier: Modifier = Modifier, article: Article) {
         UnsaveAlert(
             onDismiss = { showAlert = false },
             onConfirm = {
+                onRemoved.invoke()
                 showAlert = false
                 isSaved = false
                 unsaveArticle(savedArticlesRepo, article)
