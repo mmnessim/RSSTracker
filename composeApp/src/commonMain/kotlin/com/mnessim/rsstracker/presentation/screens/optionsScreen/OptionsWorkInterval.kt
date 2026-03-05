@@ -62,8 +62,7 @@ fun OptionsWorkInterval(
     }
 
     LaunchedEffect(Unit) {
-        val snoozedPref = prefsRepo.getPrefByKey("snoozed") ?: "false"
-        isSnoozed = snoozedPref == "true"
+        isSnoozed = prefsRepo.getPrefByKey("snoozed") == "true"
     }
 
     fun labelFor(minutes: Int): String {

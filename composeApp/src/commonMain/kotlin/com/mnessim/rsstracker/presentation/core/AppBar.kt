@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.InvertColors
 import androidx.compose.material.icons.filled.Notifications
+import androidx.compose.material.icons.filled.NotificationsOff
 import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -32,6 +33,7 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mnessim.rsstracker.Constants
+import com.mnessim.rsstracker.domain.repositories.PreferencesRepo
 import com.mnessim.rsstracker.domain.services.ApiService
 import io.ktor.client.HttpClient
 import io.ktor.http.HttpStatusCode
@@ -52,9 +54,14 @@ fun AppBar(
     onTitleTap: () -> Unit
 ) {
     val client = koinInject<HttpClient>()
+    val prefsRepo = koinInject<PreferencesRepo>()
+
     val apiService = ApiService(client)
+
     var status by remember { mutableStateOf(HttpStatusCode.InternalServerError) }
     val scope = rememberCoroutineScope()
+
+    var isSnoozed by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         // Intervals (ms)
@@ -87,6 +94,12 @@ fun AppBar(
             val jitter = (currentInterval * 0.1).toLong().coerceAtLeast(0L)
             val delayMs = currentInterval + Random.nextLong(-jitter, jitter + 1)
             delay(delayMs)
+        }
+    }
+
+    LaunchedEffect(Unit) {
+        prefsRepo.getSnoozedFlow().collect { snoozed ->
+            isSnoozed = snoozed
         }
     }
 
@@ -145,11 +158,20 @@ fun AppBar(
                             .size(10.dp)
                     )
                 }
-                IconButton(onClick = onNotificationButton) {
-                    Icon(
-                        imageVector = Icons.Default.Notifications,
-                        contentDescription = "Test Notifications"
-                    ) // Icon
+                IconButton(onClick = {
+                    if (!isSnoozed) onNotificationButton()
+                }) {
+                    if (isSnoozed) {
+                        Icon(
+                            imageVector = Icons.Default.NotificationsOff,
+                            contentDescription = "Notifications snoozed"
+                        )
+                    } else {
+                        Icon(
+                            imageVector = Icons.Default.Notifications,
+                            contentDescription = "Test Notifications"
+                        ) // Icon
+                    }
                 } // IconButton
                 Surface(
                     modifier = Modifier
