@@ -1,5 +1,12 @@
 # Release Notes
 
+## Current Release - Version 1.0.16
+
+### UI
+
+- Match UI in list of sources in About screen to rest of app
+- Refresh Saved Articles screen when unsaving so that list updates
+
 ## Previous Release - Version 1.0.15
 
 ### UI

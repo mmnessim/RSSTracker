@@ -13,10 +13,11 @@ fun AppStartScheduler() {
     val scheduled = remember { mutableStateOf(false) }
     val workService = koinInject<IWorkService>()
     val prefsRepo = koinInject<PreferencesRepo>()
+    val snoozed = prefsRepo.getPrefByKey("snoozed") == "true"
 
     LaunchedEffect(Unit) {
         println("Scheduler called")
-        if (!scheduled.value) {
+        if (!scheduled.value && !snoozed) {
             ensureScheduled(workService, prefsRepo)
             scheduled.value = true
         }

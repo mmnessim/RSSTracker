@@ -13,6 +13,7 @@ import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import com.mnessim.rsstracker.domain.models.Term
 import com.mnessim.rsstracker.domain.repositories.ITermsRepo
+import com.mnessim.rsstracker.domain.repositories.PreferencesRepo
 import com.mnessim.rsstracker.utils.notifications.NotificationManager
 import io.ktor.client.HttpClient
 import org.koin.core.component.KoinComponent
@@ -73,6 +74,7 @@ actual class WorkService : KoinComponent, IWorkService {
         }
 
         val manager = koin.getOrNull<NotificationManager>()
+        val isSnoozed = koin.getOrNull<PreferencesRepo>()?.getPrefByKey("snoozed") == "true"
 
         val terms = termsRepo.getAllTerms()
         for (t in terms) {
@@ -89,11 +91,13 @@ actual class WorkService : KoinComponent, IWorkService {
                     )
                 )
 
-                manager.showNotification(
-                    "New results for ${t.term.replaceFirstChar { it.uppercase() }}",
-                    "Tap to see new results",
-                    t.id
-                )
+                if (!isSnoozed) {
+                    manager.showNotification(
+                        "New results for ${t.term.replaceFirstChar { it.uppercase() }}",
+                        "Tap to see new results",
+                        t.id
+                    )
+                }
 
             }
         }
@@ -176,6 +180,7 @@ class WorkerDelegate(appContext: Context, params: WorkerParameters) :
         }
 
         val manager = koin.getOrNull<NotificationManager>()
+        val isSnoozed = koin.getOrNull<PreferencesRepo>()?.getPrefByKey("snoozed") == "true"
 
         val terms = termsRepo.getAllTerms()
         for (t in terms) {
@@ -190,7 +195,7 @@ class WorkerDelegate(appContext: Context, params: WorkerParameters) :
                         lastArticleGuid = articles[0].guid
                     )
                 )
-                if (t.lastArticleGuid != articles[0].guid && manager != null) {
+                if (t.lastArticleGuid != articles[0].guid && manager != null && !isSnoozed) {
 //                    val notificationId = notificationIdGen.incrementAndGet()
                     manager.showNotification(
                         "New results for ${t.term.replaceFirstChar { it.uppercase() }}",

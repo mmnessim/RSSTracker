@@ -23,7 +23,11 @@ class PreferencesRepo(private val database: Database) {
     }
 
     fun updatePref(key: String, value: String) {
-        queries.updatePreference(value, key)
+        if (getPrefByKey(key) == null) {
+            queries.insertPreference(key, value)
+        } else {
+            queries.updatePreference(value, key)
+        }
     }
 
     fun deletePref(key: String) {

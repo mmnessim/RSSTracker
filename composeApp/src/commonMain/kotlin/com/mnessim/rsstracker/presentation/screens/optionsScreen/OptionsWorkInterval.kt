@@ -47,6 +47,7 @@ fun OptionsWorkInterval(
     var intervalIndex by remember { mutableStateOf(0f) }
     var isSaved by remember { mutableStateOf(true) }
     var isSavedUI by remember { mutableStateOf(true) }
+    var isSnoozed by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         val savedMinutes = prefsRepo.getPrefByKey("workInterval")?.toIntOrNull()
@@ -60,6 +61,11 @@ fun OptionsWorkInterval(
         }
     }
 
+    LaunchedEffect(Unit) {
+        val snoozedPref = prefsRepo.getPrefByKey("snoozed") ?: "false"
+        isSnoozed = snoozedPref == "true"
+    }
+
     fun labelFor(minutes: Int): String {
         return if (minutes % 60 == 0) {
             val hours = minutes / 60
@@ -70,6 +76,16 @@ fun OptionsWorkInterval(
     }
 
     val currentMinutes = options[intervalIndex.roundToInt()]
+
+    fun toggleSnooze() {
+        if (isSnoozed) {
+            prefsRepo.updatePref("snoozed", "false")
+            isSnoozed = false
+        } else {
+            prefsRepo.updatePref("snoozed", "true")
+            isSnoozed = true
+        }
+    }
 
     Surface(
         shadowElevation = 4.dp,
@@ -82,6 +98,14 @@ fun OptionsWorkInterval(
         Column(
             modifier = Modifier.padding(12.dp)
         ) {
+            Button(
+                onClick = { toggleSnooze() },
+                content = {
+                    Text(
+                        text = if (isSnoozed) "Turn on notifications" else "Turn off notifications"
+                    )
+                }
+            )
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = buildAnnotatedString {
