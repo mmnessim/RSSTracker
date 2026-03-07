@@ -62,6 +62,7 @@ fun AppBar(
     val scope = rememberCoroutineScope()
 
     var isSnoozed by remember { mutableStateOf(false) }
+    var showAlert by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         // Intervals (ms)
@@ -159,7 +160,7 @@ fun AppBar(
                     )
                 }
                 IconButton(onClick = {
-                    if (!isSnoozed) onNotificationButton()
+                    showAlert = !showAlert
                 }) {
                     if (isSnoozed) {
                         Icon(
@@ -190,6 +191,23 @@ fun AppBar(
                         contentDescription = "Toggle Dark Mode"
                     ) // Icon
                 } // Surface
+            }
+        )
+    }
+
+    if (showAlert) {
+        NotificationOptionAlert(
+            isSnoozed = isSnoozed,
+            onCancel = { showAlert = false },
+            onConfirm = {
+                prefsRepo.updatePref("snoozed", "true")
+                isSnoozed = true
+                showAlert = false
+            },
+            onDismiss = {
+                prefsRepo.updatePref("snoozed", "false")
+                isSnoozed = false
+                showAlert = false
             }
         )
     }
