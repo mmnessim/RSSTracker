@@ -4,7 +4,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -25,23 +24,15 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.mnessim.rsstracker.Constants
 import com.mnessim.rsstracker.domain.repositories.PreferencesRepo
-import com.mnessim.rsstracker.domain.services.ApiService
 import io.ktor.client.HttpClient
-import io.ktor.http.HttpStatusCode
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.isActive
-import kotlinx.coroutines.launch
 import org.koin.compose.koinInject
-import kotlin.random.Random
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,47 +47,47 @@ fun AppBar(
     val client = koinInject<HttpClient>()
     val prefsRepo = koinInject<PreferencesRepo>()
 
-    val apiService = ApiService(client)
-
-    var status by remember { mutableStateOf(HttpStatusCode.InternalServerError) }
-    val scope = rememberCoroutineScope()
+//    val apiService = ApiService(client)
+//
+//    var status by remember { mutableStateOf(HttpStatusCode.InternalServerError) }
+//    val scope = rememberCoroutineScope()
 
     var isSnoozed by remember { mutableStateOf(false) }
     var showAlert by remember { mutableStateOf(false) }
 
-    LaunchedEffect(Unit) {
-        // Intervals (ms)
-        val healthyInterval = 5 * 60_000L       // 5 minutes
-        val unhealthyBase = 500L                // half second when unhealthy
-        val maxBackoff = 5 * 60_000L            // cap backoff at 5 minutes
-        var currentInterval = unhealthyBase
-        var consecutiveFailures = 0
-
-        while (isActive) {
-            try {
-                val result = apiService.checkHealth()
-                status = result
-
-                if (result == HttpStatusCode.OK) {
-                    currentInterval = healthyInterval
-                    consecutiveFailures = 0
-                } else {
-                    consecutiveFailures++
-                    currentInterval = (unhealthyBase * (1L shl (consecutiveFailures - 1)))
-                        .coerceAtMost(maxBackoff)
-                }
-            } catch (t: Throwable) {
-                consecutiveFailures++
-                currentInterval = (unhealthyBase * (1L shl (consecutiveFailures - 1)))
-                    .coerceAtMost(maxBackoff)
-                status = HttpStatusCode.InternalServerError
-            }
-
-            val jitter = (currentInterval * 0.1).toLong().coerceAtLeast(0L)
-            val delayMs = currentInterval + Random.nextLong(-jitter, jitter + 1)
-            delay(delayMs)
-        }
-    }
+//    LaunchedEffect(Unit) {
+//        // Intervals (ms)
+//        val healthyInterval = 5 * 60_000L       // 5 minutes
+//        val unhealthyBase = 500L                // half second when unhealthy
+//        val maxBackoff = 5 * 60_000L            // cap backoff at 5 minutes
+//        var currentInterval = unhealthyBase
+//        var consecutiveFailures = 0
+//
+//        while (isActive) {
+//            try {
+//                val result = apiService.checkHealth()
+//                status = result
+//
+//                if (result == HttpStatusCode.OK) {
+//                    currentInterval = healthyInterval
+//                    consecutiveFailures = 0
+//                } else {
+//                    consecutiveFailures++
+//                    currentInterval = (unhealthyBase * (1L shl (consecutiveFailures - 1)))
+//                        .coerceAtMost(maxBackoff)
+//                }
+//            } catch (t: Throwable) {
+//                consecutiveFailures++
+//                currentInterval = (unhealthyBase * (1L shl (consecutiveFailures - 1)))
+//                    .coerceAtMost(maxBackoff)
+//                status = HttpStatusCode.InternalServerError
+//            }
+//
+//            val jitter = (currentInterval * 0.1).toLong().coerceAtLeast(0L)
+//            val delayMs = currentInterval + Random.nextLong(-jitter, jitter + 1)
+//            delay(delayMs)
+//        }
+//    }
 
     LaunchedEffect(Unit) {
         prefsRepo.getSnoozedFlow().collect { snoozed ->
@@ -143,22 +134,22 @@ fun AppBar(
                 {}
             }, // navigationIcon =
             actions = {
-                Surface(
-                    color = if (status == HttpStatusCode.OK) Color.Green else Color.Red,
-                    shape = CircleShape,
-                    onClick = {
-                        status = HttpStatusCode.Processing
-                        scope.launch {
-                            status = apiService.checkHealth()
-                        }
-                    }
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .padding(horizontal = 12.dp)
-                            .size(10.dp)
-                    )
-                }
+//                Surface(
+//                    color = if (status == HttpStatusCode.OK) Color.Green else Color.Red,
+//                    shape = CircleShape,
+//                    onClick = {
+//                        status = HttpStatusCode.Processing
+//                        scope.launch {
+//                            status = apiService.checkHealth()
+//                        }
+//                    }
+//                ) {
+//                    Box(
+//                        modifier = Modifier
+//                            .padding(horizontal = 12.dp)
+//                            .size(10.dp)
+//                    )
+//                }
                 IconButton(onClick = {
                     showAlert = !showAlert
                 }) {

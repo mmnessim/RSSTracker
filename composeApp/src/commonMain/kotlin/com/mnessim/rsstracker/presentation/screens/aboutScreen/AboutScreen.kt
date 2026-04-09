@@ -136,6 +136,15 @@ fun AboutScreen(
                 }
             }
             item {
+                HealthCheck(
+                    modifier = Modifier
+                        .background(
+                            color = MaterialTheme.colorScheme.secondaryContainer,
+                            shape = RoundedCornerShape(8.dp)
+                        ),
+                )
+            }
+            item {
                 FeedsList(
                     modifier = Modifier
                         .background(
@@ -145,6 +154,7 @@ fun AboutScreen(
                         .height(600.dp)
                 )
             }
+
         }
         // Maybe add a feedback form or something
     }
